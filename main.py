@@ -4,7 +4,8 @@
 CLI Principal y Orquestador Modular de Reportes
 Permite compilar:
 - Reportes basados en Video (con GIFs y skills figure-enhancer / progressive-tutorial)
-- Informes institucionales EPIS (Negocios Electrónicos con Odoo, rubricas y plantillas .docx)
+- Informes institucionales EPIS (Negocios Electrónicos con Odoo, rúbricas y plantillas .docx)
+- Inspección estructural rápida (--inspect)
 """
 
 import sys
@@ -39,9 +40,13 @@ def run_video_report(args):
 
 def run_epis_ne_report(args):
     from src.reports.epis_ne.builder import generate_epis_ne_report
-    template = args.template if args.template else "inputs/NE/Lab05/GenericTemplate.docx"
+    template = args.template if args.template else "inputs/templates/academic-epis.docx"
     output = args.output if args.output else "output/NE/Lab05/Informe_Lab05_Distribuidora_Inca_SCM.docx"
     generate_epis_ne_report(template_path=template, output_path=output)
+
+def run_inspect(args):
+    from src.docx_engine.inspector import inspect_docx
+    inspect_docx(args.file)
 
 def main():
     parser = argparse.ArgumentParser(description="Orquestador Modular de Generación de Reportes")
@@ -57,8 +62,12 @@ def main():
 
     # Subcomando: epis-ne
     parser_epis = subparsers.add_parser("epis-ne", help="Genera informe académico EPIS Negocios Electrónicos")
-    parser_epis.add_argument("--template", type=str, help="Ruta a GenericTemplate.docx")
+    parser_epis.add_argument("--template", type=str, help="Ruta a la plantilla canónica (.docx)")
     parser_epis.add_argument("--output", type=str, help="Ruta de salida del .docx")
+
+    # Subcomando: inspect
+    parser_inspect = subparsers.add_parser("inspect", help="Inspección estructural dry-run de un documento .docx")
+    parser_inspect.add_argument("file", type=str, help="Ruta al archivo .docx a inspeccionar")
 
     args = parser.parse_args()
 
@@ -66,8 +75,9 @@ def main():
         run_video_report(args)
     elif args.command == "epis-ne":
         run_epis_ne_report(args)
+    elif args.command == "inspect":
+        run_inspect(args)
     else:
-        # Por defecto si no se pasa subcomando, mostrar ayuda
         parser.print_help()
 
 if __name__ == "__main__":
