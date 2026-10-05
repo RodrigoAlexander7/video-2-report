@@ -15,6 +15,7 @@ COLOR_BODY_TEXT = RGBColor(0x1F, 0x24, 0x21)       # Grafito suave para lectura
 COLOR_CAPTION = RGBColor(0x55, 0x5B, 0x6E)         # Gris tenue
 COLOR_BORDER = "CBD5E1"                            # Borde tenue para bloques de código
 COLOR_CODE_BG = "F8FAFC"                           # Fondo bloque código #F8FAFC
+COLOR_NOTE_BG = "EFF6FF"                           # Fondo caja informativa #EFF6FF
 
 def apply_cell_margins(cell, top=140, bottom=140, left=180, right=180):
     """Establece márgenes internos de respiración en las celdas de la tabla (en dxa)."""
@@ -43,7 +44,7 @@ def add_heading_1(cell, text, cfg: ReportConfig):
 
 def add_heading_2(cell, text, cfg: ReportConfig):
     p = cell.add_paragraph()
-    p.paragraph_format.space_before = Pt(10)
+    p.paragraph_format.space_before = Pt(11)
     p.paragraph_format.space_after = Pt(4)
     p.paragraph_format.keep_with_next = True
     run = p.add_run(text)
@@ -83,7 +84,6 @@ def add_bullet_point(cell, bold_text, desc_text, cfg: ReportConfig, level: int =
     p.paragraph_format.line_spacing = cfg.body_line_spacing
     p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
 
-    # Símbolo jerárquico elegante
     bullet_symbol = "■  " if level == 1 else "○  "
     r_sym = p.add_run(bullet_symbol)
     r_sym.font.name = cfg.font_family_body
@@ -104,7 +104,6 @@ def add_bullet_point(cell, bold_text, desc_text, cfg: ReportConfig, level: int =
     return p
 
 def add_code_block(cell, code_str, cfg: ReportConfig):
-    """Inserta un bloque de código estilizado con borde, fondo tenue y tipografía monospaced moderna."""
     p = cell.add_paragraph()
     p.paragraph_format.space_before = Pt(6)
     p.paragraph_format.space_after = Pt(8)
@@ -115,7 +114,6 @@ def add_code_block(cell, code_str, cfg: ReportConfig):
     shd = parse_xml(f'<w:shd {nsdecls("w")} w:fill="{COLOR_CODE_BG}"/>')
     pPr.append(shd)
 
-    # Borde lateral izquierdo distintivo
     pBdr = parse_xml(
         f'<w:pBdr {nsdecls("w")}>'
         f'  <w:left w:val="single" w:sz="18" w:space="8" w:color="1B365D"/>'
@@ -127,13 +125,12 @@ def add_code_block(cell, code_str, cfg: ReportConfig):
     pPr.append(pBdr)
 
     run = p.add_run(code_str)
-    # Se especifica JetBrains Mono con fallback a Consolas en OpenXML
     run.font.name = cfg.font_family_code
     run.font.size = Pt(cfg.font_size_code_pt)
     run.font.color.rgb = RGBColor(0x24, 0x29, 0x2E)
     return p
 
-def add_image_with_caption(cell, img_path, caption_text, cfg: ReportConfig, width=Inches(5.6)):
+def add_image_with_caption(cell, img_path, caption_text, cfg: ReportConfig, width=Inches(5.4)):
     p_img = cell.add_paragraph()
     p_img.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_img.paragraph_format.space_before = Pt(8)
@@ -156,48 +153,167 @@ def build_report(cfg: ReportConfig = DEFAULT_CONFIG):
 
     # --- 1. ENCABEZADO Y TÍTULO ---
     table.rows[2].cells[1].text = "Implementación del Sistema de Movimiento Físico y Salto para Personaje en Unity 3D"
-    # Formatear tipografía del título a Times New Roman 12
     p_tit = table.rows[2].cells[1].paragraphs[0]
     p_tit.runs[0].font.name = cfg.font_family_body
     p_tit.runs[0].font.size = Pt(cfg.font_size_body_pt)
     p_tit.runs[0].bold = True
 
-    # --- 2. SECCIÓN: RESULTADOS Y PRUEBAS ---
+    # --- 2. SECCIÓN: RESULTADOS Y PRUEBAS (TUTORIAL PROGRESIVO) ---
     cell_ej = table.rows[9].cells[0]
     cell_ej.text = ""
     apply_cell_margins(cell_ej)
 
-    add_heading_1(cell_ej, "EJERCICIOS RESUELTOS: IMPLEMENTACIÓN DE CONTROL DE PERSONAJE (CatControl)", cfg)
+    add_heading_1(cell_ej, "EJERCICIOS RESUELTOS: TUTORIAL DE CONTROLADOR DE PERSONAJE (CatControl)", cfg)
 
     add_body_paragraph(cell_ej, 
-        "En la presente práctica de laboratorio se desarrolló e integró el controlador físico integral 'CatControl' en lenguaje C# "
-        "para un personaje tridimensional dentro del entorno de desarrollo Unity 6. El propósito central radicó en establecer "
-        "un sistema cinemático-físico robusto que aproveche el componente nativo Rigidbody, garantice una velocidad tangencial homogénea "
-        "en cualquier ángulo de desplazamiento (mitigando aceleraciones espurias en movimientos diagonales), aplique restricciones angulares "
-        "para conservar el equilibrio biomecánico del personaje y orqueste mecánicas de salto verticales condicionadas a la detección fidedigna del terreno.",
+        "A continuación se presenta la guía instructiva y metodológica desarrollada a lo largo de la práctica para implementar "
+        "desde cero el sistema de movimiento físico y salto de un personaje tridimensional ('Mango') en Unity 6. "
+        "El tutorial está organizado en 5 etapas secuenciales, abordando desde la configuración de componentes hasta la resolución "
+        "de problemas físicos reales observados en ejecución.",
         cfg
     )
 
-    add_heading_2(cell_ej, "1. Configuración de Componentes Físicos en el Inspector de Unity", cfg)
+    # --- ETAPA 1 ---
+    add_heading_2(cell_ej, "Etapa 1: Preparación del GameObject y Configuración de Físicas en Unity", cfg)
     add_body_paragraph(cell_ej, 
-        "Para que la entidad 'Mango' interactúe de forma consistente con las primitivas del entorno (colisionadores de terreno y obstáculos), "
-        "se integró un componente Rigidbody con masa unitaria (1 kg) y gravedad activa. Asimismo, se incorporó un CapsuleCollider alineado al modelo. "
-        "A fin de asegurar la integridad del ensamblado y evitar excepciones por desreferenciación nula en tiempo de ejecución, el script fue decorado "
-        "con el atributo obligatorio [RequireComponent(typeof(Rigidbody))].",
+        "En esta primera etapa se dota al modelo tridimensional de la capacidad de interactuar con la gravedad y colisionar con el suelo.",
         cfg
     )
+    add_bullet_point(cell_ej, "Paso 1.1: Seleccionar el GameObject. ", "En la jerarquía de la escena, localice y seleccione el objeto del personaje ('Mango').", cfg, level=1)
+    add_bullet_point(cell_ej, "Paso 1.2: Añadir componentes físicos. ", "En el Inspector, agregue un componente 'Rigidbody' (con masa unitaria y 'Use Gravity' habilitado) y un 'CapsuleCollider' ajustando su radio y altura a la malla del modelo.", cfg, level=1)
+    add_bullet_point(cell_ej, "Paso 1.3: Asignar el script. ", "Cree y vincule el script C# denominado CatControl.cs, garantizando la directiva [RequireComponent(typeof(Rigidbody))] para forzar la presencia del motor físico.", cfg, level=1)
+
     add_image_with_caption(cell_ej, 
         os.path.join(cfg.media_dir, "unity_inspector_rigidbody.png"),
-        "Figura 1: Configuración de componentes Rigidbody, CapsuleCollider y script CatControl en el Inspector de Unity.",
+        "Figura 1: Configuración de componentes físicos en el Inspector de Unity (destacando las restricciones requeridas).",
         cfg)
 
-    add_heading_2(cell_ej, "2. Implementación de Código Fuente en C# (CatControl.cs)", cfg)
+    # --- ETAPA 2 ---
+    add_heading_2(cell_ej, "Etapa 2: Declaración de Parámetros y Lectura de Entradas (Movimiento X/Z)", cfg)
     add_body_paragraph(cell_ej, 
-        "A continuación se presenta el código definitivo implementado en el script CatControl.cs, estructurado según las directrices de ciclo de vida de MonoBehaviour:",
+        "El objetivo de esta etapa es capturar las pulsaciones de teclado del usuario (WASD) y traducirlas a un vector de dirección tridimensional normalizado, "
+        "aplicando una velocidad tangible sobre el plano horizontal sin cancelar la velocidad vertical existente en Y.",
+        cfg
+    )
+    add_bullet_point(cell_ej, "Instrucción de codificación: ", "Declare las variables públicas de velocidad en la cabecera de la clase y defina el método 'ProcessInput()' invocado desde 'Update()':", cfg, level=1)
+
+    code_step2 = """// CatControl.cs - Fragmento Incremental: Variables y Movimiento
+[RequireComponent(typeof(Rigidbody))]
+public class CatControl : MonoBehaviour
+{
+    public float speed = 5.0f;
+    public float jumpForce = 5.0f;
+    Rigidbody rb;
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
+
+    void Update()
+    {
+        ProcessInput();
+    }
+
+    private void ProcessInput()
+    {
+        float x = 0f;
+        float z = 0f;
+
+        if (Input.GetKey(KeyCode.W)) z += 1f;
+        else if (Input.GetKey(KeyCode.S)) z -= 1f;
+        if (Input.GetKey(KeyCode.A)) x -= 1f;
+        else if (Input.GetKey(KeyCode.D)) x += 1f;
+
+        // Normalización para velocidad equitativa en diagonales
+        Vector3 direction = new Vector3(x, 0f, z).normalized;
+
+        // Asignación directa a linearVelocity respetando la caída gravitacional previa
+        rb.linearVelocity = new Vector3(direction.x * speed, rb.linearVelocity.y, direction.z * speed);
+    }
+}"""
+    add_code_block(cell_ej, code_step2, cfg)
+
+    # --- ETAPA 3 ---
+    add_heading_2(cell_ej, "Etapa 3: Prueba de Desplazamiento y Corrección de Torque Parásito", cfg)
+    add_body_paragraph(cell_ej, 
+        "Una vez programado el movimiento horizontal, se procede a ingresar en modo Play en Unity para evaluar la respuesta del personaje sobre el terreno.",
+        cfg
+    )
+    add_bullet_point(cell_ej, "Incidencia Observada (Minuto 13:38): ", 
+        "Al presionar las teclas de movimiento, la fricción producida en la base del colisionador genera un momento de fuerza (torque) "
+        "que hace que el gato pierda el equilibrio, tambaleándose y volcando descontroladamente sobre sus ejes horizontales.", cfg, level=1)
+
+    add_image_with_caption(cell_ej, 
+        os.path.join(cfg.media_dir, "animacion_movimiento_rotacion_error.gif"),
+        "Figura 2 (GIF Animado): Anomalía de torque y vuelco postural por falta de restricciones angulares.",
+        cfg)
+
+    add_bullet_point(cell_ej, "Instrucción Correctiva en Unity: ", 
+        "Para solucionar este vuelco físico, regrese al Inspector del objeto 'Mango' -> Rigidbody -> Constraints, y marque las casillas "
+        "'Freeze Rotation' en X, Y y Z (señaladas por la flecha en la Figura 1). Con esto, el motor físico ignora las fuerzas de rotación parásitas.", cfg, level=1)
+
+    add_image_with_caption(cell_ej, 
+        os.path.join(cfg.media_dir, "animacion_movimiento_exitoso.gif"),
+        "Figura 3 (GIF Animado): Desplazamiento rectilíneo fluido y equilibrado tras activar Freeze Rotation en el Inspector.",
+        cfg)
+
+    # --- ETAPA 4 ---
+    add_heading_2(cell_ej, "Etapa 4: Implementación de la Detección de Suelo y Mecánica de Salto", cfg)
+    add_body_paragraph(cell_ej, 
+        "Para incorporar el salto sin permitir que el jugador ejecute saltos infinitos en el aire (Double Jump indeseado), "
+        "se introduce una bandera booleana 'isGrounded' condicionada a los eventos físicos de contacto contra el suelo.",
+        cfg
+    )
+    add_bullet_point(cell_ej, "Paso 4.1: Condición de Salto. ", "Al presionar la barra espaciadora (KeyCode.Space), se inyecta el valor de 'jumpForce' en el eje Y de 'linearVelocity', solo si 'isGrounded' es verdadero.", cfg, level=1)
+    add_bullet_point(cell_ej, "Paso 4.2: Callbacks Mágicos de MonoBehaviour. ", "Se emplean 'OnCollisionStay' para mantener activa la condición de suelo mientras se esté en contacto con el terreno, y 'OnCollisionExit' para revocarla de inmediato al despegarse.", cfg, level=1)
+
+    code_step4 = """// CatControl.cs - Fragmento Incremental: Lógica de Salto y Colisiones
+    bool isGrounded;
+
+    private void ProcessInput()
+    {
+        // ... (código de movimiento previo)
+
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        {
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
+        }
+    }
+
+    // Callbacks situados en el ámbito DIRECTO de la clase MonoBehaviour:
+    void OnCollisionStay(Collision collision)
+    {
+        isGrounded = true;
+    }
+
+    void OnCollisionExit(Collision collision)
+    {
+        isGrounded = false;
+    }"""
+    add_code_block(cell_ej, code_step4, cfg)
+
+    add_bullet_point(cell_ej, "Advertencia Técnica Clave (Ámbito de Clases): ", 
+        "Durante la sesión se cometió el error inicial de anidar 'OnCollisionStay' dentro del método 'ProcessInput()'. "
+        "Debido a que Unity invoca estos eventos mágicos por reflexión buscando la firma en la raíz de MonoBehaviour, nunca se ejecutaban y el salto fallaba. "
+        "Asegúrese rigurosamente de que ambos métodos se ubiquen fuera de 'ProcessInput()' y al mismo nivel jerárquico que 'Start()' y 'Update()'.", cfg, level=1)
+
+    # --- ETAPA 5 ---
+    add_heading_2(cell_ej, "Etapa 5: Verificación Final y Código Fuente Consolidado", cfg)
+    add_body_paragraph(cell_ej, 
+        "Tras corregir el anidamiento de los métodos mágicos, se ejecuta la escena final en Unity para constatar la sinergia "
+        "entre el desplazamiento multidireccional y la mecánica de salto continuo.",
         cfg
     )
 
-    csharp_code = """using UnityEngine;
+    add_image_with_caption(cell_ej, 
+        os.path.join(cfg.media_dir, "animacion_salto_gato.gif"),
+        "Figura 4 (GIF Animado): Validación final del salto continuo responsivo respetando las colisiones del terreno.",
+        cfg)
+
+    add_body_paragraph(cell_ej, "Como referencia completa para el lector, a continuación se consolida el script íntegro listo para producción:", cfg)
+
+    full_code = """using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 public class CatControl : MonoBehaviour
@@ -252,52 +368,7 @@ public class CatControl : MonoBehaviour
         isGrounded = false;
     }
 }"""
-    add_code_block(cell_ej, csharp_code, cfg)
-
-    add_heading_2(cell_ej, "3. Detección, Análisis y Resolución de Incidencias Técnicas", cfg)
-    
-    add_bullet_point(cell_ej, 
-        "Incidencia 1: Inestabilidad por Torque Físico y Pérdida de Equilibrio", 
-        "", cfg, level=1)
-    add_bullet_point(cell_ej, 
-        "Diagnóstico: ", 
-        "Durante las primeras pruebas de traslación (minuto 13:38), la fricción generada en el punto de contacto entre la base del CapsuleCollider "
-        "y el suelo produjo una fuerza de torque que provocó la inclinación progresiva y rotación involuntaria del personaje sobre sus ejes horizontales.", 
-        cfg, level=2)
-    add_bullet_point(cell_ej, 
-        "Resolución: ", 
-        "Se aplicaron restricciones en el componente Rigidbody activando las casillas 'Freeze Rotation' en los ejes X, Y y Z. Con ello, el solver físico "
-        "ignora los momentos angulares parásitos, conservando al personaje perpendicular a la superficie.", 
-        cfg, level=2)
-
-    add_image_with_caption(cell_ej, 
-        os.path.join(cfg.media_dir, "animacion_movimiento_rotacion_error.gif"),
-        "Figura 2 (GIF Animado): Desbalance postural y rotación parásita del personaje por ausencia de restricciones físicas angulares.",
-        cfg)
-
-    add_image_with_caption(cell_ej, 
-        os.path.join(cfg.media_dir, "animacion_movimiento_exitoso.gif"),
-        "Figura 3 (GIF Animado): Traslación equilibrada y estable tras la congelación de rotaciones en Rigidbody Constraints.",
-        cfg)
-
-    add_bullet_point(cell_ej, 
-        "Incidencia 2: Fallo de Ámbito de Clases en Métodos de Colisión (Callbacks Mágicos)", 
-        "", cfg, level=1)
-    add_bullet_point(cell_ej, 
-        "Diagnóstico: ", 
-        "Al codificar la mecánica de salto, los métodos OnCollisionStay y OnCollisionExit quedaron accidentalmente anidados dentro de la función ProcessInput(). "
-        "Dado que el motor Unity invoca las rutinas de eventos físicos por reflexión buscando firmas directas en la clase base MonoBehaviour, las funciones nunca "
-        "fueron ejecutadas, manteniendo 'isGrounded' permanentemente en false e impidiendo el salto.", 
-        cfg, level=2)
-    add_bullet_point(cell_ej, 
-        "Resolución: ", 
-        "Se refactorizó el alcance de las llaves en CatControl.cs, ubicando ambos métodos al mismo nivel jerárquico que Start() y Update(), restableciendo el flujo.", 
-        cfg, level=2)
-
-    add_image_with_caption(cell_ej, 
-        os.path.join(cfg.media_dir, "animacion_salto_gato.gif"),
-        "Figura 4 (GIF Animado): Comprobación exitosa de la mecánica de salto continuo respetando las colisiones contra el suelo.",
-        cfg)
+    add_code_block(cell_ej, full_code, cfg)
 
     # --- 3. SECCIÓN: CUESTIONARIO TÉCNICO ---
     cell_cue = table.rows[10].cells[0]
@@ -391,7 +462,7 @@ public class CatControl : MonoBehaviour
 
     # Guardar documento
     doc.save(cfg.output_path)
-    print(f"✓ Reporte compilado exitosamente con estética mejorada en: {cfg.output_path}")
+    print(f"✓ Reporte compilado exitosamente en formato tutorial por etapas en: {cfg.output_path}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generador de reporte estilizado en Word")

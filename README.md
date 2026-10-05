@@ -7,8 +7,9 @@ Automated pipeline to transcribe local technical and educational videos, extract
 ## 🚀 Key Features
 
 - **Local Offline Transcription:** Powered by `faster-whisper` (`small` model with `int8` quantization), highly optimized for multi-core CPUs without requiring dedicated GPUs.
-- **Sharp Animated GIFs (HQ):** Extracts video segments in native panel resolution (960px width, 18 fps, 256 adaptive color palette, and `gifsicle` optimization).
+- **`progressive-tutorial-builder` Skill:** Transcribes raw video demonstrations into structured, step-by-step written tutorials featuring incremental code snippets, cause-and-effect visual proof, and actionable instructional tone.
 - **`figure-enhancer` Skill:** Smart panel cropping (*smart crop*), translucent focus boxes with badges, and clean vector arrows pointing to exact parameters and buttons.
+- **Sharp Animated GIFs (HQ):** Extracts video segments in native panel resolution (960px width, 18 fps, 256 adaptive color palette, and `gifsicle` optimization).
 - **Strict Editorial Aesthetics:**
   - Academic typography: **Times New Roman** at **12 pt** (body) and **14/13 pt** (corporate navy headers `#1B365D`).
   - Source code: **JetBrains Mono** at **9.5 pt** inside styled containers with a side accent bar and subtle background fill.
@@ -23,6 +24,8 @@ Automated pipeline to transcribe local technical and educational videos, extract
 video-report/
 ├── .agents/
 │   └── skills/
+│       ├── progressive-tutorial-builder/ # Skill for step-by-step tutorial structuring
+│       │   └── SKILL.md                 # Rules for incremental code & cause-effect evidence
 │       ├── figure-enhancer/             # Skill to crop, focus, and annotate screenshots
 │       │   ├── scripts/
 │       │   │   └── enhance_image.py     # Deterministic graphics functions (crop, arrow, focus_box)
@@ -85,20 +88,25 @@ flatpak run org.onlyoffice.desktopeditors Reporte_Practica_02_Unity.docx &
 
 ---
 
-## 📝 Prompt Template for Future Reports
+## 🤖 How Future Agents Operate (100% Replicable)
 
-When requesting a new report for a different video, you can provide this prompt to the assistant:
+The next time you want to process a video report, simply place:
+1. The new `.docx` template in `inputs/input-template.docx`.
+2. The new video in `inputs/video/<video_name>.mp4`.
+
+And provide this simple prompt to the agent:
 
 ```markdown
-Please generate a new laboratory report using the template at `inputs/input-template.docx` and the video at `inputs/video/<file>.mp4`:
-
-1. **Topic Context:** [e.g., Robotics Workshop with ROS 2 / Shader Programming in Godot].
-2. **Key Moments to Capture:**
-   - Screenshot 1: Parameter configuration in [window/panel name].
-   - GIF 1: Initial bug or unbalanced behavior demonstration.
-   - GIF 2: Fixed behavior demonstration.
-3. **Use of `figure-enhancer` Skill:**
-   - Crop only the relevant panel (avoid full-screen captures).
-   - Add focus boxes and red arrows pointing to [specific parameters/buttons].
-4. **Document Formatting:** Times New Roman 12 pt, code in JetBrains Mono, hierarchical indents, and rigorous technical answers in the questionnaire.
+Generate the lab report following the repository workflow:
+- Video: inputs/video/<video_name>.mp4
+- Template: inputs/input-template.docx
+- Use the `progressive-tutorial-builder` skill to structure the development section into progressive step-by-step stages with incremental code.
+- Use the `figure-enhancer` skill to crop panels and highlight key settings with arrows and focus boxes.
+- Output: Word document formatted for OnlyOffice with HQ GIFs.
 ```
+
+The agent will automatically:
+1. Run `transcribe_fast.py` to extract the speech-to-text with timestamps.
+2. Segment the video into logical tutorial milestones.
+3. Call `figure-enhancer` to extract cropped panels and high-quality GIFs.
+4. Compile the styled `.docx` report with Times New Roman 12 pt, JetBrains Mono code blocks, and valid OpenXML schemas.
