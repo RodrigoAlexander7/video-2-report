@@ -1,0 +1,1222 @@
+[
+  {
+    "start": 0.0,
+    "end": 11.0,
+    "text": "Ahora continuaremos con el tutorial. En esta sección vamos a darle movimiento al gato, tanto para los lados, arriba-abajo y claro en la opción de saltar."
+  },
+  {
+    "start": 11.0,
+    "end": 15.0,
+    "text": "Por este lado tenemos la última versión del código."
+  },
+  {
+    "start": 15.0,
+    "end": 22.0,
+    "text": "Pues en ella no habíamos hecho mucho, esto era algo generado de forma automática por el editor."
+  },
+  {
+    "start": 22.0,
+    "end": 29.0,
+    "text": "En la parte de abajo tenemos instrucciones que habíamos asignado cuando una tecla se presionaba."
+  },
+  {
+    "start": 29.0,
+    "end": 37.0,
+    "text": "Y pues estas no hacen nada, simplemente sirven para colocar un texto en la terminal."
+  },
+  {
+    "start": 37.0,
+    "end": 46.0,
+    "text": "La misión de esta sección es que al final de esta pues el gato se pueda mover con total libertad en todos los ejes."
+  },
+  {
+    "start": 46.0,
+    "end": 49.0,
+    "text": "Listo, entonces por donde empezamos?"
+  },
+  {
+    "start": 49.0,
+    "end": 58.0,
+    "text": "Primero lo que tenemos que observar es que este gato va a tener una velocidad y también una fuerza de salto."
+  },
+  {
+    "start": 58.0,
+    "end": 61.0,
+    "text": "¿Por qué agregar estos dos parámetros? Porque le debes nadar dinamismo al juego."
+  },
+  {
+    "start": 61.0,
+    "end": 70.0,
+    "text": "Y porque justamente estos parámetros van a ser usados posteriormente para asignar ciertas reglas en la dinámica del juego."
+  },
+  {
+    "start": 70.0,
+    "end": 75.0,
+    "text": "Entonces vamos a empezar por esa parte."
+  },
+  {
+    "start": 76.0,
+    "end": 88.0,
+    "text": "Para asignar una variable de velocidad y una de fuerza de salto, lo haremos justo debajo de la clase acá del monovigiber."
+  },
+  {
+    "start": 88.0,
+    "end": 96.0,
+    "text": "Entonces empezamos sería un public flood."
+  },
+  {
+    "start": 97.0,
+    "end": 102.0,
+    "text": "Acá ya se va a poner un public flood también."
+  },
+  {
+    "start": 102.0,
+    "end": 113.0,
+    "text": "Nuestra rotation speed es fuerza de salto así que jump force y le vamos a dar un valor flood de 5."
+  },
+  {
+    "start": 113.0,
+    "end": 119.0,
+    "text": "Después vamos a ir jugando con estos valores para ver cuál es la mejor para nuestro juego."
+  },
+  {
+    "start": 127.0,
+    "end": 133.0,
+    "text": "Ahora recordando lo que vimos en clase tendríamos que seleccionar un elemento."
+  },
+  {
+    "start": 133.0,
+    "end": 139.0,
+    "text": "El elemento es el rigidbody. Recordemos, a ver vamos a cambiar de vista."
+  },
+  {
+    "start": 139.0,
+    "end": 148.0,
+    "text": "Recordemos que el rigidbody es esto de acá. Básicamente le dan las físicas a nuestro personaje."
+  },
+  {
+    "start": 148.0,
+    "end": 154.0,
+    "text": "Podemos asignar una masa entre otras características como el uso de gravedad, etc."
+  },
+  {
+    "start": 154.0,
+    "end": 163.0,
+    "text": "Entonces es un componente importante."
+  },
+  {
+    "start": 163.0,
+    "end": 170.0,
+    "text": "Si nosotros lo seleccionamos y trabajamos sobre él, al final vamos a obtener lo que deseamos,"
+  },
+  {
+    "start": 170.0,
+    "end": 176.0,
+    "text": "que es el movimiento en X, en Y y un movimiento real del personaje."
+  },
+  {
+    "start": 176.0,
+    "end": 181.0,
+    "text": "Por tal motivo vamos a quitar esta línea."
+  },
+  {
+    "start": 181.0,
+    "end": 188.0,
+    "text": "Y ahora sí, vamos a empezar obteniendo, voy a cambiar a la vista de Visual Studio."
+  },
+  {
+    "start": 196.0,
+    "end": 200.0,
+    "text": "Y estamos aquí en Visual Studio."
+  },
+  {
+    "start": 200.0,
+    "end": 204.0,
+    "text": "Lo primero que queremos es crear un objeto rigidbody."
+  },
+  {
+    "start": 204.0,
+    "end": 209.0,
+    "text": "El cual se va a llamar rigidbody."
+  },
+  {
+    "start": 209.0,
+    "end": 214.0,
+    "text": "Quitamos esto de 2D porque solo usamos un objeto de rigidbody convencional."
+  },
+  {
+    "start": 214.0,
+    "end": 219.0,
+    "text": "Ahora lo nombramos RB."
+  },
+  {
+    "start": 219.0,
+    "end": 226.0,
+    "text": "Este objeto va a ser al final, rigidbody."
+  },
+  {
+    "start": 226.0,
+    "end": 233.0,
+    "text": "Va a ser al final el que nosotros vamos a modificar."
+  },
+  {
+    "start": 233.0,
+    "end": 236.0,
+    "text": "Entonces ya hemos creado uno nada más."
+  },
+  {
+    "start": 236.0,
+    "end": 241.0,
+    "text": "Y más adelante vamos a obtener uno y lo vamos a almacenar en esta variable que estamos creando ahora mismo."
+  },
+  {
+    "start": 241.0,
+    "end": 245.0,
+    "text": "Para el siguiente paso vamos a asignar un estado de salto."
+  },
+  {
+    "start": 245.0,
+    "end": 250.0,
+    "text": "Entonces el estado de salto solo va a poder ocurrir cuando estemos en el suelo."
+  },
+  {
+    "start": 250.0,
+    "end": 254.0,
+    "text": "Por eso vamos a crear una variable de tipo booleano,"
+  },
+  {
+    "start": 254.0,
+    "end": 260.0,
+    "text": "la cual podemos llamar isGrounded, que está en el piso."
+  },
+  {
+    "start": 260.0,
+    "end": 265.0,
+    "text": "Y ya, con esto detendremos todas las partes de nuestras variables."
+  },
+  {
+    "start": 265.0,
+    "end": 269.0,
+    "text": "Ahora en el start, ¿qué es el start?"
+  },
+  {
+    "start": 269.0,
+    "end": 275.0,
+    "text": "El start es un método que se ejecuta cuando el componente existe,"
+  },
+  {
+    "start": 275.0,
+    "end": 277.0,
+    "text": "cuando el componente se crea."
+  },
+  {
+    "start": 277.0,
+    "end": 281.0,
+    "text": "En este caso, ¿qué queremos hacer cuando el componente, nuestro gato, se crea?"
+  },
+  {
+    "start": 281.0,
+    "end": 286.0,
+    "text": "Vamos a obtener, con getComponent, el método de getComponent,"
+  },
+  {
+    "start": 286.0,
+    "end": 289.0,
+    "text": "el objeto del rigidbody de nuestro gato."
+  },
+  {
+    "start": 289.0,
+    "end": 295.0,
+    "text": "Y con esto obtenemos un..."
+  },
+  {
+    "start": 298.0,
+    "end": 302.0,
+    "text": "Lo que queremos ahora será crear el processInput."
+  },
+  {
+    "start": 302.0,
+    "end": 308.0,
+    "text": "Como podemos ver en el código, el update es una función que se actualiza cada millisecondo"
+  },
+  {
+    "start": 308.0,
+    "end": 311.0,
+    "text": "y el processInput es lo que hace cada millisecondo."
+  },
+  {
+    "start": 311.0,
+    "end": 317.0,
+    "text": "Entonces, el siguiente paso lógico es editar este processInput"
+  },
+  {
+    "start": 317.0,
+    "end": 323.0,
+    "text": "para que reaccione a los movimientos que nosotros le indiquemos."
+  },
+  {
+    "start": 323.0,
+    "end": 327.0,
+    "text": "Entonces, para ello lo vamos a hacer de la siguiente manera."
+  },
+  {
+    "start": 331.0,
+    "end": 338.0,
+    "text": "Lo primero que vamos a hacer es capturar el movimiento."
+  },
+  {
+    "start": 341.0,
+    "end": 345.0,
+    "text": "Tanto horizontal como vertical."
+  },
+  {
+    "start": 345.0,
+    "end": 353.0,
+    "text": "Bueno, horizontal, bueno, los ejes en los ejes z y x."
+  },
+  {
+    "start": 353.0,
+    "end": 359.0,
+    "text": "Recordemos que el eje y es el vertical de arriba y abajo"
+  },
+  {
+    "start": 359.0,
+    "end": 365.0,
+    "text": "y este eje es el que controla el salto, así que este no lo vamos a tocar por el momento."
+  },
+  {
+    "start": 365.0,
+    "end": 370.0,
+    "text": "Y una vez capturados los movimientos, vamos a actualizarlos."
+  },
+  {
+    "start": 371.0,
+    "end": 379.0,
+    "text": "Actualizarlos en el rector de movimiento."
+  },
+  {
+    "start": 379.0,
+    "end": 383.0,
+    "text": "Y finalmente lo vamos a aplicar en el rigidbody."
+  },
+  {
+    "start": 383.0,
+    "end": 386.0,
+    "text": "Entonces, empecemos con eso."
+  },
+  {
+    "start": 386.0,
+    "end": 391.0,
+    "text": "Para capturar los movimientos tanto en x como en z, vamos a crear dos variables."
+  },
+  {
+    "start": 391.0,
+    "end": 395.0,
+    "text": "Float x, por ejemplo."
+  },
+  {
+    "start": 396.0,
+    "end": 401.0,
+    "text": "Esta va a ser nada más la variable que guarde este movimiento."
+  },
+  {
+    "start": 401.0,
+    "end": 407.0,
+    "text": "Así que vamos a colocarle un valor de 0, 0f."
+  },
+  {
+    "start": 407.0,
+    "end": 412.0,
+    "text": "Y para z, pues vamos a hacer lo mismo."
+  },
+  {
+    "start": 412.0,
+    "end": 418.0,
+    "text": "En estas variables nosotros vamos a almacenar los valores de x y z"
+  },
+  {
+    "start": 418.0,
+    "end": 423.0,
+    "text": "cuando varíen en torno a cuando tengan alguna variación."
+  },
+  {
+    "start": 423.0,
+    "end": 428.0,
+    "text": "Ahora, para detectar justamente esa variación,"
+  },
+  {
+    "start": 428.0,
+    "end": 434.0,
+    "text": "nosotros vamos a escribir una condicional muy similar a la que tenemos abajo."
+  },
+  {
+    "start": 434.0,
+    "end": 440.0,
+    "text": "Así que vamos a copiar esto."
+  },
+  {
+    "start": 440.0,
+    "end": 451.0,
+    "text": "If input.getK y kPout de bw, z más igual a 1f."
+  },
+  {
+    "start": 452.0,
+    "end": 459.0,
+    "text": "Sí, es exactamente lo que queremos, lo dejamos así."
+  },
+  {
+    "start": 459.0,
+    "end": 467.0,
+    "text": "Tanto para bw como para z, que sería lo mismo,"
+  },
+  {
+    "start": 467.0,
+    "end": 476.0,
+    "text": "solo que en negativo para a y finalmente para d,"
+  },
+  {
+    "start": 476.0,
+    "end": 480.0,
+    "text": "que ese sí sería impositivo."
+  },
+  {
+    "start": 480.0,
+    "end": 485.0,
+    "text": "Listo, con estas cuatro, aunque esto lo podemos escribir de otra forma,"
+  },
+  {
+    "start": 485.0,
+    "end": 497.0,
+    "text": "para que quede más legible y lo mismo con las demás."
+  },
+  {
+    "start": 506.0,
+    "end": 530.0,
+    "text": "Y listo, lo tenemos."
+  },
+  {
+    "start": 530.0,
+    "end": 532.0,
+    "text": "Ahora que hay un detalle importante,"
+  },
+  {
+    "start": 532.0,
+    "end": 535.0,
+    "text": "que si es que lo dejamos así, tal como está,"
+  },
+  {
+    "start": 535.0,
+    "end": 541.0,
+    "text": "vamos a tener un error si es que presionamos más de una tecla a la vez."
+  },
+  {
+    "start": 541.0,
+    "end": 546.0,
+    "text": "Y esto, pues, se soluciona muy fácil,"
+  },
+  {
+    "start": 546.0,
+    "end": 551.0,
+    "text": "colocando un else para que cuando se presione dos teclas a la vez"
+  },
+  {
+    "start": 551.0,
+    "end": 558.0,
+    "text": "solo se considere el movimiento de la primera o la primera tecla seleccionada."
+  },
+  {
+    "start": 558.0,
+    "end": 565.0,
+    "text": "Así que colocamos un else para manejar ese caso."
+  },
+  {
+    "start": 565.0,
+    "end": 570.0,
+    "text": "Lo siguiente, como había indicado, era crear un vector de movimiento."
+  },
+  {
+    "start": 570.0,
+    "end": 574.0,
+    "text": "La creación de un vector se hace a través de vector3,"
+  },
+  {
+    "start": 574.0,
+    "end": 581.0,
+    "text": "porque es un vector en tres ejes, x y z, al cual vamos a llamar Direction."
+  },
+  {
+    "start": 581.0,
+    "end": 584.0,
+    "text": "Y le asignamos el valor de new vector3."
+  },
+  {
+    "start": 584.0,
+    "end": 587.0,
+    "text": "Ahora asignamos los valores x, y, y, z."
+  },
+  {
+    "start": 587.0,
+    "end": 589.0,
+    "text": "X es el x que creamos."
+  },
+  {
+    "start": 589.0,
+    "end": 593.0,
+    "text": "El y se queda en 0f, porque no hemos modificado este valor."
+  },
+  {
+    "start": 593.0,
+    "end": 596.0,
+    "text": "No hemos creado alguna variable para almacenar el valor en y,"
+  },
+  {
+    "start": 596.0,
+    "end": 599.0,
+    "text": "y z se queda como z."
+  },
+  {
+    "start": 599.0,
+    "end": 604.0,
+    "text": "Y finalmente normaliza estos valores."
+  },
+  {
+    "start": 604.0,
+    "end": 612.0,
+    "text": "Ahora, lo siguiente es aplicar los cambios a nuestro juego a través del rigidbody."
+  },
+  {
+    "start": 612.0,
+    "end": 616.0,
+    "text": "Entonces, recordemos que acá arriba hemos almacenado nuestro rigidbody,"
+  },
+  {
+    "start": 616.0,
+    "end": 622.0,
+    "text": "el rigidbody de nuestro elemento per se, que es el gato."
+  },
+  {
+    "start": 622.0,
+    "end": 628.0,
+    "text": "Entonces, vamos a rb haciendo referencia a nuestro rigidbody."
+  },
+  {
+    "start": 628.0,
+    "end": 642.0,
+    "text": "Vector3, punto linear velocity, y acá igual a vector3."
+  },
+  {
+    "start": 659.0,
+    "end": 664.0,
+    "text": "Estamos asignando un nuevo, un nuevo vector en esta parte."
+  },
+  {
+    "start": 664.0,
+    "end": 668.0,
+    "text": "Recordemos que estos valores salen de Direction."
+  },
+  {
+    "start": 668.0,
+    "end": 676.0,
+    "text": "Así que vamos a colocar Direction.x multiplicado por la velocidad."
+  },
+  {
+    "start": 676.0,
+    "end": 681.0,
+    "text": "No le pasamos el objeto directamente porque estamos considerando estas variables."
+  },
+  {
+    "start": 681.0,
+    "end": 683.0,
+    "text": "Velocidad y fuerza de salto."
+  },
+  {
+    "start": 683.0,
+    "end": 688.0,
+    "text": "Si es que no consideraríamos la velocidad, pues nada más le asignamos el vector directamente."
+  },
+  {
+    "start": 688.0,
+    "end": 693.0,
+    "text": "Pero dado que estamos trabajando con la velocidad, tenemos que crear un nuevo vector."
+  },
+  {
+    "start": 693.0,
+    "end": 698.0,
+    "text": "Y en este, pues, pasarle los parámetros del vector que acabamos de crear,"
+  },
+  {
+    "start": 698.0,
+    "end": 704.0,
+    "text": "incluyendo la multiplicación por la velocidad del personaje."
+  },
+  {
+    "start": 704.0,
+    "end": 708.0,
+    "text": "Entonces, linear velocity."
+  },
+  {
+    "start": 708.0,
+    "end": 721.0,
+    "text": "Rb, linear velocity, punto y Direction por Speed."
+  },
+  {
+    "start": 721.0,
+    "end": 726.0,
+    "text": "Finalmente, con esto tendríamos los valores actualizados."
+  },
+  {
+    "start": 726.0,
+    "end": 730.0,
+    "text": "Y pues ahora vamos a probarlo en el código."
+  },
+  {
+    "start": 730.0,
+    "end": 735.0,
+    "text": "Así que vamos a cambiar de vista a la de Unity."
+  },
+  {
+    "start": 736.0,
+    "end": 738.0,
+    "text": "Listo."
+  },
+  {
+    "start": 742.0,
+    "end": 745.0,
+    "text": "Andas dice que hay un pequeño error por punto y coma."
+  },
+  {
+    "start": 745.0,
+    "end": 747.0,
+    "text": "Y aquí está."
+  },
+  {
+    "start": 754.0,
+    "end": 758.0,
+    "text": "Y ahora nos dice que..."
+  },
+  {
+    "start": 759.0,
+    "end": 763.0,
+    "text": "Hay un error con vector3."
+  },
+  {
+    "start": 764.0,
+    "end": 767.0,
+    "text": "Volvemos a Visor Studio."
+  },
+  {
+    "start": 770.0,
+    "end": 774.0,
+    "text": "Y efectivamente, tenemos caún."
+  },
+  {
+    "start": 775.0,
+    "end": 782.0,
+    "text": "Un error dado que no hemos colocado el nimel antes del vector3 para crearlo."
+  },
+  {
+    "start": 783.0,
+    "end": 787.0,
+    "text": "Y con esto ya podríamos regresar al juego."
+  },
+  {
+    "start": 787.0,
+    "end": 790.0,
+    "text": "A ver, cambiamos la vista."
+  },
+  {
+    "start": 794.0,
+    "end": 807.0,
+    "text": "Volvemos a la consola y vamos a ejecutar para comprobar que nuestros cambios sí funcionen, de verdad."
+  },
+  {
+    "start": 807.0,
+    "end": 809.0,
+    "text": "Entonces, ya."
+  },
+  {
+    "start": 809.0,
+    "end": 811.0,
+    "text": "Ahí cae el gato."
+  },
+  {
+    "start": 811.0,
+    "end": 814.0,
+    "text": "Ahora vamos a hacer un poco más grande esto para poder verla terminar."
+  },
+  {
+    "start": 814.0,
+    "end": 819.0,
+    "text": "Y si le damos a D, pues el gato se mueve al otro lado."
+  },
+  {
+    "start": 819.0,
+    "end": 823.0,
+    "text": "Se mueve para todos los lados."
+  },
+  {
+    "start": 823.0,
+    "end": 828.0,
+    "text": "Pero si podemos ver, hay como una rotación extraña."
+  },
+  {
+    "start": 831.0,
+    "end": 833.0,
+    "text": "Pero funciona."
+  },
+  {
+    "start": 834.0,
+    "end": 838.0,
+    "text": "Para solucionar eso de la rotación es muy sencillo."
+  },
+  {
+    "start": 839.0,
+    "end": 841.0,
+    "text": "Pues gira, gira bastante."
+  },
+  {
+    "start": 842.0,
+    "end": 849.0,
+    "text": "El detalle es hacer esto, con Freeze Rotation, pero cuando esté de pie."
+  },
+  {
+    "start": 851.0,
+    "end": 859.0,
+    "text": "Freeze Rotation in XJZ para evitar ese tambaleo hacia los costados que vimos."
+  },
+  {
+    "start": 859.0,
+    "end": 862.0,
+    "text": "Entonces volvemos a cargar."
+  },
+  {
+    "start": 863.0,
+    "end": 870.0,
+    "text": "Y ahora sí tenemos un movimiento mucho más decente."
+  },
+  {
+    "start": 871.0,
+    "end": 874.0,
+    "text": "Mucho, mucho más decente."
+  },
+  {
+    "start": 878.0,
+    "end": 885.0,
+    "text": "Bien, el salto todavía no pasa, no hace nada porque no lo hemos implementado."
+  },
+  {
+    "start": 886.0,
+    "end": 892.0,
+    "text": "Pero ya tenemos una buena versión."
+  },
+  {
+    "start": 892.0,
+    "end": 898.0,
+    "text": "Ahora estoy abretando la tecla S y estoy abretando el doble y atrás."
+  },
+  {
+    "start": 898.0,
+    "end": 906.0,
+    "text": "No es un problema de lógica, es un problema de orientación del personaje que podemos corregir rotándolo."
+  },
+  {
+    "start": 906.0,
+    "end": 916.0,
+    "text": "Si cogemos el personaje le damos a Rotate Control y lo colocamos rotado."
+  },
+  {
+    "start": 918.0,
+    "end": 920.0,
+    "text": "Aunque esto viene del componente."
+  },
+  {
+    "start": 921.0,
+    "end": 923.0,
+    "text": "No sé, ya lo corregimos más adelante."
+  },
+  {
+    "start": 923.0,
+    "end": 930.0,
+    "text": "No creo que rotándolo así se solucione, sino tendremos que rotar sin considerar."
+  },
+  {
+    "start": 931.0,
+    "end": 937.0,
+    "text": "Solo el eje físico, no el personaje."
+  },
+  {
+    "start": 938.0,
+    "end": 940.0,
+    "text": "Pero probemos."
+  },
+  {
+    "start": 940.0,
+    "end": 942.0,
+    "text": "Ahora se funciona."
+  },
+  {
+    "start": 943.0,
+    "end": 949.0,
+    "text": "Al parecer sí era la solución de rotarlo de esa forma, porque el doble está haciendo que avance."
+  },
+  {
+    "start": 949.0,
+    "end": 951.0,
+    "text": "S está haciendo que retroceda."
+  },
+  {
+    "start": 951.0,
+    "end": 953.0,
+    "text": "D está haciendo que se vaya a la derecha."
+  },
+  {
+    "start": 953.0,
+    "end": 955.0,
+    "text": "Y A está haciendo que se vaya a la izquierda."
+  },
+  {
+    "start": 955.0,
+    "end": 958.0,
+    "text": "Es el comportamiento superado."
+  },
+  {
+    "start": 960.0,
+    "end": 962.0,
+    "text": "Ya perfecto."
+  },
+  {
+    "start": 962.0,
+    "end": 968.0,
+    "text": "Ahora finalmente vamos a agregar lo que es el control de saltos."
+  },
+  {
+    "start": 968.0,
+    "end": 971.0,
+    "text": "Y para eso volvemos al editor."
+  },
+  {
+    "start": 973.0,
+    "end": 978.0,
+    "text": "Entonces para esta parte vamos a modificarla por acá abajo."
+  },
+  {
+    "start": 978.0,
+    "end": 986.0,
+    "text": "Justo después de haber creado la forma para nosotros poder movernos."
+  },
+  {
+    "start": 986.0,
+    "end": 992.0,
+    "text": "Vamos a crear la lógica que se va a encargar de poder hacer que el gato salte."
+  },
+  {
+    "start": 992.0,
+    "end": 994.0,
+    "text": "Entonces es muy sencilla."
+  },
+  {
+    "start": 994.0,
+    "end": 999.0,
+    "text": "Vamos a verificar que la tecla de espacio, que es la tecla que vamos a asignar al salto, está apretada."
+  },
+  {
+    "start": 999.0,
+    "end": 1001.0,
+    "text": "Y que el gato está en el suelo."
+  },
+  {
+    "start": 1001.0,
+    "end": 1007.0,
+    "text": "Si se cumplen estas dos condiciones, tecla apretada al atón del suelo, pues ejecutamos la lógica de salto."
+  },
+  {
+    "start": 1007.0,
+    "end": 1009.0,
+    "text": "Entonces iniciamos."
+  },
+  {
+    "start": 1013.0,
+    "end": 1014.0,
+    "text": "Justo acá."
+  },
+  {
+    "start": 1016.0,
+    "end": 1020.0,
+    "text": "Acá hay una diferencia importante entre K-Down y K."
+  },
+  {
+    "start": 1020.0,
+    "end": 1026.0,
+    "text": "Si nosotros apretamos K, podemos mantener presionada una tecla en segundos."
+  },
+  {
+    "start": 1026.0,
+    "end": 1030.0,
+    "text": "Y por todo ese tiempo la tecla va a estar activa."
+  },
+  {
+    "start": 1030.0,
+    "end": 1032.0,
+    "text": "O sea, va a emitir una señal."
+  },
+  {
+    "start": 1032.0,
+    "end": 1034.0,
+    "text": "Tecla presionada, tecla presionada, tecla presionada."
+  },
+  {
+    "start": 1034.0,
+    "end": 1041.0,
+    "text": "Pero en K-Down, lo que va a hacer es que si nosotros apretamos una tecla y la mantenemos presionada,"
+  },
+  {
+    "start": 1041.0,
+    "end": 1043.0,
+    "text": "solo se va a considerar la primera acción."
+  },
+  {
+    "start": 1043.0,
+    "end": 1045.0,
+    "text": "O sea, solo una."
+  },
+  {
+    "start": 1045.0,
+    "end": 1047.0,
+    "text": "Solo cuando la apretamos."
+  },
+  {
+    "start": 1047.0,
+    "end": 1052.0,
+    "text": "Ok, esto es importante para no tener, digamos, que mucho algo muy repetido."
+  },
+  {
+    "start": 1052.0,
+    "end": 1056.0,
+    "text": "Aunque igual con la validación que hacemos de IsGroundDead,"
+  },
+  {
+    "start": 1056.0,
+    "end": 1062.0,
+    "text": "pues esto al final lo podemos quitar y igual lo vamos a ver cómo funcionan."
+  },
+  {
+    "start": 1063.0,
+    "end": 1067.0,
+    "text": "Esto de acá lo vamos a quitar."
+  },
+  {
+    "start": 1067.0,
+    "end": 1069.0,
+    "text": "Y ahora sí."
+  },
+  {
+    "start": 1069.0,
+    "end": 1072.0,
+    "text": "Lo que vamos a hacer ahora es crear un Vector."
+  },
+  {
+    "start": 1072.0,
+    "end": 1075.0,
+    "text": "Primero vamos a llamar al RedditBody."
+  },
+  {
+    "start": 1075.0,
+    "end": 1081.0,
+    "text": "Y le vamos a utilizar el método linear velocity."
+  },
+  {
+    "start": 1081.0,
+    "end": 1084.0,
+    "text": "Bueno, la propiedad linear velocity."
+  },
+  {
+    "start": 1084.0,
+    "end": 1088.0,
+    "text": "Igual a Vector3."
+  },
+  {
+    "start": 1089.0,
+    "end": 1095.0,
+    "text": "Y le estamos asignando los valores que ya tiene el RedditBody,"
+  },
+  {
+    "start": 1095.0,
+    "end": 1097.0,
+    "text": "Neckis en Z."
+  },
+  {
+    "start": 1097.0,
+    "end": 1103.0,
+    "text": "Y acá le estamos asignando la fuerza de salto, directamente."
+  },
+  {
+    "start": 1103.0,
+    "end": 1108.0,
+    "text": "Que es 5 flotante."
+  },
+  {
+    "start": 1108.0,
+    "end": 1113.0,
+    "text": "Y con esto ya deberíamos tener la lógica de salto."
+  },
+  {
+    "start": 1113.0,
+    "end": 1119.0,
+    "text": "Pero hay un detalle importante que son la creación de dos métodos."
+  },
+  {
+    "start": 1119.0,
+    "end": 1124.0,
+    "text": "Y los métodos son, justo acá están las."
+  },
+  {
+    "start": 1124.0,
+    "end": 1132.0,
+    "text": "Un collisionEnter, aunque sea una documentación, un collisionStay."
+  },
+  {
+    "start": 1135.0,
+    "end": 1141.0,
+    "text": "Y esto lo vamos a simplificar para que sea IsGroundDeadTrue."
+  },
+  {
+    "start": 1141.0,
+    "end": 1144.0,
+    "text": "¿Qué significa este método?"
+  },
+  {
+    "start": 1144.0,
+    "end": 1151.0,
+    "text": "Pues este método es un método mágico, al igual que Update o Start ya existen."
+  },
+  {
+    "start": 1151.0,
+    "end": 1155.0,
+    "text": "Y es llamado si es que se encuentra en el código."
+  },
+  {
+    "start": 1155.0,
+    "end": 1159.0,
+    "text": "Y básicamente es que cuando estamos en una colisión,"
+  },
+  {
+    "start": 1159.0,
+    "end": 1161.0,
+    "text": "pues tocando el suelo, por ejemplo,"
+  },
+  {
+    "start": 1161.0,
+    "end": 1165.0,
+    "text": "entonces va a colocar IsGroundDeadTrue."
+  },
+  {
+    "start": 1165.0,
+    "end": 1171.0,
+    "text": "Y por el contrario, void onCollisionExit,"
+  },
+  {
+    "start": 1171.0,
+    "end": 1174.0,
+    "text": "cuando dejamos de estar en una colisión, por ejemplo, en el suelo,"
+  },
+  {
+    "start": 1174.0,
+    "end": 1177.0,
+    "text": "pues se va a utilizar a falso."
+  },
+  {
+    "start": 1177.0,
+    "end": 1180.0,
+    "text": "Entonces vamos a ir ahora a la vista de Unity."
+  },
+  {
+    "start": 1183.0,
+    "end": 1188.0,
+    "text": "Y ya estamos en Unity."
+  },
+  {
+    "start": 1188.0,
+    "end": 1198.0,
+    "text": "Y vamos a ejecutar para ver cómo es que ahora están siendo usados."
+  },
+  {
+    "start": 1201.0,
+    "end": 1203.0,
+    "text": "Y ya cayó."
+  },
+  {
+    "start": 1203.0,
+    "end": 1206.0,
+    "text": "El movimiento sigue estando."
+  },
+  {
+    "start": 1209.0,
+    "end": 1213.0,
+    "text": "Ahora el salto no está siendo detectado."
+  },
+  {
+    "start": 1213.0,
+    "end": 1215.0,
+    "text": "Entonces vamos a ver qué está pasando."
+  },
+  {
+    "start": 1215.0,
+    "end": 1221.0,
+    "text": "Ahora de vuelta en el código, pues pareciera que todo anda bien,"
+  },
+  {
+    "start": 1221.0,
+    "end": 1224.0,
+    "text": "pero que hay un detalle importante dentro del proceso de símbolo."
+  },
+  {
+    "start": 1224.0,
+    "end": 1228.0,
+    "text": "Si nos fijamos esta llave está encerrando ahora mismo absolutamente todo,"
+  },
+  {
+    "start": 1228.0,
+    "end": 1235.0,
+    "text": "incluido los colisionadores, los métodos de detección de colisión."
+  },
+  {
+    "start": 1235.0,
+    "end": 1240.0,
+    "text": "Y estos métodos no pueden ir ahí, sino que van fuera,"
+  },
+  {
+    "start": 1240.0,
+    "end": 1246.0,
+    "text": "al nivel de Start o de Update, como ya ha indicado,"
+  },
+  {
+    "start": 1246.0,
+    "end": 1254.0,
+    "text": "son métodos mágicos y estos son detectados por el mismo Unity."
+  },
+  {
+    "start": 1254.0,
+    "end": 1259.0,
+    "text": "Así que si es que no los colocamos fuera, pues no, nunca son detectados."
+  },
+  {
+    "start": 1259.0,
+    "end": 1263.0,
+    "text": "Tenía que estar al mismo nivel de Update o de Start."
+  },
+  {
+    "start": 1263.0,
+    "end": 1268.0,
+    "text": "Así que ahora sí, vamos a cambiar la vista a Unity"
+  },
+  {
+    "start": 1268.0,
+    "end": 1273.0,
+    "text": "y vamos a volver a darle Play."
+  },
+  {
+    "start": 1273.0,
+    "end": 1280.0,
+    "text": "Y ahora sí, debería detectar nuestro movimiento."
+  },
+  {
+    "start": 1282.0,
+    "end": 1287.0,
+    "text": "Nos movemos y si se dan cuenta, hay un pequeño saltito."
+  },
+  {
+    "start": 1288.0,
+    "end": 1302.0,
+    "text": "Ahora, acá es una cuestión ya de cómo se decida usar el programa de juego."
+  },
+  {
+    "start": 1302.0,
+    "end": 1304.0,
+    "text": "Por ejemplo, si ahora doy espacio y mantengo presionado,"
+  },
+  {
+    "start": 1304.0,
+    "end": 1306.0,
+    "text": "que se dan cuenta que ya no salta."
+  },
+  {
+    "start": 1306.0,
+    "end": 1310.0,
+    "text": "Pero ahí nosotros podemos, justo lo que decía,"
+  },
+  {
+    "start": 1310.0,
+    "end": 1316.0,
+    "text": "quitar esto de Get K, Get K Down y dejar solo el Get K,"
+  },
+  {
+    "start": 1316.0,
+    "end": 1319.0,
+    "text": "para que, bueno, acá está volviendo a compilar,"
+  },
+  {
+    "start": 1319.0,
+    "end": 1323.0,
+    "text": "para que detecte siempre la tecla."
+  },
+  {
+    "start": 1323.0,
+    "end": 1326.0,
+    "text": "Y como mencioné, si es que está en Collision,"
+  },
+  {
+    "start": 1326.0,
+    "end": 1330.0,
+    "text": "bueno, estos métodos Collision que agregamos al final,"
+  },
+  {
+    "start": 1330.0,
+    "end": 1335.0,
+    "text": "pues ya se encargarían de detectar cuando está en el piso."
+  },
+  {
+    "start": 1335.0,
+    "end": 1337.0,
+    "text": "Entonces, hemos hecho ese cambio justo ahora."
+  },
+  {
+    "start": 1337.0,
+    "end": 1339.0,
+    "text": "Ah, no, cambié de vista."
+  },
+  {
+    "start": 1339.0,
+    "end": 1342.0,
+    "text": "Hicimos ese cambio y si nos ponemos a saltar"
+  },
+  {
+    "start": 1342.0,
+    "end": 1344.0,
+    "text": "y mantendemos la tecla apretada,"
+  },
+  {
+    "start": 1344.0,
+    "end": 1346.0,
+    "text": "porque el gato salta, salta y salta."
+  },
+  {
+    "start": 1348.0,
+    "end": 1351.0,
+    "text": "Y, pues, eso sería todo por el vídeo de hoy."
+  },
+  {
+    "start": 1351.0,
+    "end": 1354.0,
+    "text": "Hemos hecho que nuestro personaje se mueva."
+  },
+  {
+    "start": 1354.0,
+    "end": 1355.0,
+    "text": "Es un gran logro."
+  },
+  {
+    "start": 1355.0,
+    "end": 1357.0,
+    "text": "Y se hará hasta la próxima."
+  }
+]
