@@ -6,7 +6,7 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml import OxmlElement, parse_xml
 from docx.oxml.ns import nsdecls, qn
 from config import ReportConfig, DEFAULT_CONFIG
-from media_extractor import generate_all_media
+from media_extractor import generate_and_enhance_figures
 
 # Paleta corporativa sobria
 COLOR_PRIMARY_NAVY = RGBColor(0x1B, 0x36, 0x5D)    # Azul institucional #1B365D
