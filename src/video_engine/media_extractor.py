@@ -4,7 +4,8 @@ from PIL import Image, ImageDraw
 import sys
 
 # Agregar scripts de la skill
-sys.path.append(os.path.join(os.path.dirname(__file__), ".agents/skills/figure-enhancer/scripts"))
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+sys.path.append(os.path.join(project_root, ".agents/skills/figure-enhancer/scripts"))
 from enhance_image import crop_image, draw_focus_box, draw_arrow, add_technical_frame
 from config import ReportConfig, DEFAULT_CONFIG
 
