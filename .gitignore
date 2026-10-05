@@ -1,4 +1,4 @@
-# Python
+# Python & Bytecode
 __pycache__/
 *.py[cod]
 *$py.class
@@ -27,18 +27,24 @@ venv/
 ENV/
 
 # Temporary audio, raw media & intermediate files
-audio.wav
 *.wav
 *.mp3
 .~lock.*
 *.tmp
 
-# Generated outputs (keep templates, ignore heavy output builds)
+# Intermediate caches and scratch directories
+scratch/
+*.log
+
+# Generated outputs (all reports must live inside output/)
+# Keep output directory structure, but ignore heavy outputs by default
 output/
 media/
 *.docx
 !inputs/*.docx
+*.pdf
+!inputs/*.pdf
 
-# Scratch & logs
-scratch/
-*.log
+# Videos (keep directory structure with .gitkeep if needed)
+inputs/video/*.mp4
+inputs/video/*.mkv
