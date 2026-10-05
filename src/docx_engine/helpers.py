@@ -178,7 +178,7 @@ def add_screenshot_placeholder(doc, fig_num, title, module, objective, test_data
     p0 = cell.paragraphs[0]
     p0.paragraph_format.space_before = Pt(2)
     p0.paragraph_format.space_after = Pt(4)
-    r_badge = p0.add_run(f"📷 EVIDENCIA DE PROTOTIPO - FIGURA {fig_num}: {title.upper()}\n")
+    r_badge = p0.add_run(f"EVIDENCIA DE PROTOTIPO - FIGURA {fig_num}: {title.upper()}\n")
     r_badge.bold = True
     r_badge.font.name = 'Calibri'
     r_badge.font.size = Pt(10.5)

@@ -8,7 +8,7 @@ Portada, Índice, Planificación, Organización, Problema y Marco Teórico
 import docx
 from docx.shared import Inches, Pt, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH
-from report_helpers import (
+from docx_engine import (
     add_heading_1, add_heading_2, add_heading_3,
     add_p, add_bullet, add_callout, add_table_custom
 )
@@ -29,7 +29,7 @@ def build_portada_and_indice(doc):
     r12 = p12.add_run("INVESTIGACIÓN FORMATIVA - INFORME DE LABORATORIO 05")
     r12.bold = True
     r12.font.size = Pt(14)
-    r12.font.color.rgb = RGBColor(0x1B, 0x36, 0x5D)
+    r12.font.color.rgb = RGBColor(0x22, 0x22, 0x22)
     
     p15 = doc.paragraphs[15]
     p15.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -42,7 +42,7 @@ def build_portada_and_indice(doc):
     r18 = p18.add_run("TEMA DEL PROBLEMA DE APLICACIÓN:\n“DISEÑO E IMPLEMENTACIÓN DE UNA PLATAFORMA INTEGRADA DE GESTIÓN DE LA CADENA DE SUMINISTRO (SCM/ERP) CON ODOO COMMUNITY PARA DISTRIBUIDORA INCA S.R.L.”")
     r18.bold = True
     r18.font.size = Pt(12)
-    r18.font.color.rgb = RGBColor(0x1B, 0x36, 0x5D)
+    r18.font.color.rgb = RGBColor(0x22, 0x22, 0x22)
     
     p22 = doc.paragraphs[22]
     p22.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -53,7 +53,7 @@ def build_portada_and_indice(doc):
     r22_team = p22.add_run("INTEGRANTES DEL EQUIPO DE TRABAJO:\n")
     r22_team.bold = True
     r22_team.font.size = Pt(11)
-    r22_team.font.color.rgb = RGBColor(0x1B, 0x36, 0x5D)
+    r22_team.font.color.rgb = RGBColor(0x22, 0x22, 0x22)
     
     integrantes_text = (
         "• Fernandez Huarca, Rodrigo Alexander (Coordinador)\n"
@@ -168,7 +168,7 @@ def build_portada_and_indice(doc):
         r_p.bold = True
         r_p.font.name = 'Calibri'
         r_p.font.size = Pt(9.5)
-        r_p.font.color.rgb = RGBColor(0x1B, 0x36, 0x5D)
+        r_p.font.color.rgb = RGBColor(0x33, 0x33, 0x33)
 
     doc.add_page_break()
 

@@ -1,131 +1,147 @@
 ---
 name: epis-ne-report-builder
-description: Generador y formateador de informes académicos de laboratorio e investigación formativa para el curso de Negocios Electrónicos de la Escuela Profesional de Ingeniería de Sistemas (EPIS) de la Universidad Nacional de San Agustín (UNSA). Aplica la metodología de Aprendizaje Basado en Problemas (ABP), estándares de redacción académica (APA/IEEE), preserva estrictamente el formato del template original (.docx) y sigue un estilo sobrio, formal y minimalista sin exceso de color.
+description: Genera informes académicos exhaustivos y profesionales para el curso de Negocios Electrónicos (EPIS - UNSA), cumpliendo estrictamente con la estructura del template institucional (GenericTemplate.docx), rúbricas de evaluación, estilo visual sobrio sin exceso de color y análisis SCM/ERP en Odoo.
 ---
 
-# EPIS Negocios Electrónicos Report Builder
+# EPIS Negocios Electrónicos Report Builder Skill
 
-Esta habilidad guía la redacción técnica y la generación automatizada de informes de laboratorio e investigación formativa para el curso de **Negocios Electrónicos** de la **Escuela Profesional de Ingeniería de Sistemas (EPIS) - Universidad Nacional de San Agustín de Arequipa (UNSA)**.
+Esta skill define el estándar pedagógico, metodológico y técnico para redactar y compilar informes académicos formales de la **Escuela Profesional de Ingeniería de Sistemas (EPIS) - Universidad Nacional de San Agustín de Arequipa (UNSA)**, específicamente para la cátedra de **Negocios Electrónicos**.
 
-## 1. Estructura Oficial Obligatoria (Metodología ABP)
+---
 
-Todo informe entregable debe contener estrictamente los siguientes 18 apartados, sin omitir ninguno:
+## 🎯 Arquitectura Modular del Código
 
-1. **Portada Institucional:**
-   - Universidad Nacional de San Agustín de Arequipa
-   - Facultad de Ingeniería de Producción y Servicios
-   - Escuela Profesional de Ingeniería de Sistemas
-   - Escudos institucionales / Logos
-   - Curso: Negocios Electrónicos
-   - Docente: Dr. Ing. César Basilio Baluarte Araya
-   - Título del Problema de Aplicación
-   - Integrantes del equipo con apellidos y nombres completos
-   - Ciudad y Fecha (Arequipa - Perú, Año/Mes)
+Todo el motor de generación para este tipo de informes reside de manera aislada y reutilizable dentro de `src/`:
+
+```text
+video-report/
+├── src/
+│   ├── docx_engine/
+│   │   ├── helpers.py           # Funciones de estilo sobrio: add_heading, add_p, add_bullet, add_table_custom, add_callout, add_screenshot_placeholder
+│   │   └── __init__.py
+│   └── reports/
+│       └── epis_ne/
+│           ├── builder.py       # Orquestador del informe (16 secciones)
+│           ├── sections_part1.py # Portada, Índice, Planificación, Organización, Problema, Marco Teórico
+│           └── sections_part2.py # Comparativas, Trabajo en equipo, Alternativas, Selección, Prototipo Odoo, Conclusiones, etc.
+└── output/
+    └── NE/Lab05/
+        └── Informe_Lab05_Distribuidora_Inca_SCM.docx
+```
+
+---
+
+## 🚀 Ejecución desde la CLI Unificada
+
+Para compilar o regenerar el informe:
+
+```bash
+uv run python main.py epis-ne \
+  --template inputs/NE/Lab05/GenericTemplate.docx \
+  --output output/NE/Lab05/Informe_Lab05_Distribuidora_Inca_SCM.docx
+```
+
+---
+
+## 📋 Estructura Obligatoria del Informe (16 Secciones)
+
+1. **Portada Oficial EPIS:**
+   - Cabecera oficial UNSA, Escuela Profesional de Ingeniería de Sistemas.
+   - Logo/Escudo institucional intacto en alta resolución.
+   - Datos del Curso: Negocios Electrónicos.
+   - Título del Proyecto: Alineado al caso de estudio empresarial.
+   - Integrantes del equipo en orden alfabético con código CUI.
+   - Semestre, Docente y Fecha.
+
 2. **Índice General:**
    - Tabla de contenidos estructurada con numeración jerárquica y paginación referencial.
+
 3. **Planificar el tratamiento del problema:**
    - Objetivo General (alineado al caso de estudio).
    - Objetivos Específicos (mínimo 4 a 6, operacionales y verificables).
    - Alcances (delimitación funcional, técnica y organizacional).
    - Condiciones Actuales (entorno operativo, infraestructura y restricciones).
+
 4. **Organizar el trabajo del equipo/grupo:**
    - Organización del equipo (4 roles fundamentales: Coordinador, Portavoz, Secretario, Miembro).
    - Asignación de roles y funciones operativas detalladas por integrante.
+
 5. **Problema:**
    - Descripción del contexto (entorno empresarial, comercial y logístico).
    - Identificar el problema.
    - Enunciar el problema (redacción concisa y precisa).
    - Causas y efectos del problema (árbol de problemas, causas raíz, efectos cuantitativos y cualitativos).
+
 6. **Marco Teórico:**
-   - Búsqueda de nueva información (fuentes primarias, IEEE, Scopus, Google Scholar, normas ISO/PMI, repositorios tecnológicos).
+   - Búsqueda de nueva información (fuentes primarias, IEEE, Scopus, Google Scholar, normas ISO/PMI).
    - Organización de la información recopilada.
-   - Conceptos nuevos (mínimo 8 conceptos técnicos rigurosos con autor y año).
-   - Ventajas (mínimo 2 autores citados).
-   - Desventajas (mínimo 2 autores citados).
+   - Conceptos nuevos (mínimo 10 conceptos técnicos rigurosos con autor y año).
+   - Ventajas y desventajas de SCM/ERP (mínimo 2 autores citados).
    - Factores críticos de éxito (mínimo 2 autores citados).
-   - Arquitectura de tecnologías de la información (mínimo 2 autores citados).
-   - Modelos relacionados al problema (mínimo 2 autores citados).
-   - Metodologías relacionadas al problema (mínimo 2 autores citados).
-   - Métodos relacionados al problema (mínimo 2 autores citados).
-   - Técnicas relacionadas al problema (mínimo 2 autores citados).
-   - Herramientas relacionadas al problema (mínimo 3 autores citados).
-   - Habilidades necesarias para resolver el problema (mínimo 2 autores citados).
-   - Casos de Éxito reales documentados (empresas comparables).
+   - Arquitectura de TI para distribución y logística.
+   - Modelos, metodologías, métodos y técnicas (mínimo 2 autores citados por aspecto).
+   - Herramientas relacionadas al problema y habilidades del equipo.
+   - Casos de éxito reales documentados en consumo masivo.
    - Antecedentes Investigativos:
-     * Mínimo 4 Tesis de pregrado/posgrado con: Título, Autor(es), Año, Problema, Objetivos, Resultados/Conclusiones.
-     * Mínimo 4 Artículos científicos indexados con la misma ficha técnica completa.
-   - Configuración de herramientas de software (requerimientos HW/SW, pasos de configuración).
-   - Instalación de herramientas de software (procedimiento de instalación detallado).
-   - Compartir información trabajada (mecanismos colaborativos y actas de trabajo).
+     * 4 Tesis de pregrado/posgrado: Título, Autor(es), Año, Problema, Objetivos, Resultados.
+     * 4 Artículos científicos indexados con la misma ficha técnica completa.
+   - Configuración e instalación de herramientas (Odoo Community en Ubuntu/Docker).
+   - Mecanismos para compartir información trabajada.
+
 7. **Comparativa de la selección de aspectos:**
-   - Cuadros comparativos exhaustivos con criterios técnicos y ponderación:
-     * Comparativa de Modelos SCM/ERP.
-     * Comparativa de Metodologías.
-     * Comparativa de Métodos.
-     * Comparativa de Técnicas.
-     * Comparativa de Herramientas de Software (mínimo 3-4 herramientas, ej. Odoo vs ERPNext vs Apache OFBiz vs SAP B1).
-   - Cuadro de Habilidades requeridas vs habilidades del equipo.
-   - Matriz de Proponer y Sustentar las TI recabadas (TI vs Sustento técnico y de negocio).
-   - Categorización de Tecnologías de la Información (Hardware, Base de Datos, Redes, SO, Lenguajes).
+   - Cuadros comparativos exhaustivos con criterios técnicos y ponderación (Modelos, Metodologías, Métodos, Técnicas y Herramientas SCM).
+   - Cuadro de habilidades requeridas vs habilidades del equipo.
+   - Matriz de proponer y sustentar las TI recabadas.
+   - Categorización de TI (Hardware, BD, Redes, SO, Lenguajes).
+
 8. **Trabajar en grupo, colaborativamente:**
-   - Cronograma de actividades, matriz RACI o distribución de tareas por integrante.
+   - Cronograma de actividades, matriz de responsabilidades RACI.
+
 9. **Generación de posibles soluciones (Alternativas):**
-   - Mínimo 3 alternativas tecnológicas viables respetando el presupuesto límite:
+   - Mínimo 3 alternativas tecnológicas viables respetando el presupuesto límite de S/. 6,000.00:
      * a. Enunciado
      * b. Ventajas (mínimo 3)
      * c. Desventajas (mínimo 3)
      * d. Acciones a ejecutar (mínimo 3)
      * e. Innovación en la propuesta (mínimo 3)
-     * f. Otros (costos, plazos, viabilidad)
+     * f. Costos, plazos y viabilidad
+
 10. **Selección de la mejor alternativa:**
-    - Identificación unívoca de la alternativa elegida.
+    - Identificación unívoca de la alternativa elegida (Odoo Community Edition).
     - Justificación multicriterio (funcional, tecnológica, estratégica y operativa).
     - Desglose presupuestal detallado que cumpla estrictamente con la restricción de presupuesto.
+
 11. **Presentación de la Solución:**
-    - Formato de entrega (PPT / Video institucional con nomenclatura oficial UNSA).
-    - Exposición de resultados, calidad y expresión oral.
+    - Estrategia de entrega (presentación ejecutiva, video institucional, estructura de pitch).
+
 12. **Prototipo o Análisis Situacional:**
     - Requerimientos de TI detallados.
-    - Procedimiento de Configuración paso a paso en el software seleccionado (Odoo).
-    - Procedimiento de Instalación / Despliegue.
+    - Procedimiento de configuración e instalación en Odoo paso a paso.
     - Pruebas de funcionamiento por flujos de negocio (Compras, Inventario multialmacén, Ventas omnicanal, Despacho y flota).
-    - Bloques de reserva visual (*Placeholders* formales) para capturas de pantalla (`[CAPTURA XX: Titulo y descripción]`).
+    - Bloques de reserva visual (*Placeholders* formales) para capturas de pantalla (`[CAPTURA XX: Título, Objetivo y Qué debe observarse]`).
     - Verificación del cumplimiento de requerimientos y cuantificación de beneficios.
+
 13. **Lecciones Aprendidas:**
     - Categorización (Experiencia, Progreso, Entrenamiento, Habilidades, Conocimiento, Práctica, Destrezas).
-    - Redacción en tiempo pasado con las 2 estructuras metodológicas requeridas.
-    - Discusión y contrastación de lecciones aprendidas.
+    - Redacción en tiempo pasado con la estructura metodológica dual.
+
 14. **Conclusiones:**
-    - Al menos una conclusión por cada objetivo específico planteado más conclusiones de resultados (mínimo 6-8).
+    - Al menos una conclusión por cada objetivo específico planteado más conclusiones de resultados (mínimo 8).
+
 15. **Referencias:**
     - Mínimo 15 referencias académicas completas (formato IEEE o APA).
+
 16. **Anexos:**
     - Anexo 1: Láminas de presentación de resultados.
     - Anexo 2: Infografía de arquitectura técnica y flujos integrados de la cadena de suministro.
     - Anexo 3: Datos de prueba y configuración inicial del sistema.
-17. **Informe:**
-    - Evaluación de expresión escrita, coherencia y estructura.
-18. **Autoevaluación:**
-    - Tabla formal de autoevaluación cuantitativa (0-100 puntos) de los integrantes del equipo.
+    - Autoevaluación cuantitativa del equipo (0-100 puntos).
 
-## 2. Reglas de Higiene, Formato y Calidad Documental
+---
 
-1. **Preservación Estricta del Formato del Template:**
-   - **No alterar el formato del template:** Se debe preservar rigurosamente la configuración tipográfica, márgenes (2.5 cm superior, inferior, izquierdo y derecho), interlineado (sencillo o 1.15) y la jerarquía de estilos predefinidos en la plantilla original (.docx) de la cátedra.
-   - Las secciones, saltos de página y títulos del formato base institucional deben respetarse en su orden exacto sin agregar estilos incompatibles ni modificar arbitrariamente las fuentes asignadas (Calibri o Times New Roman de 11 a 12 pt).
+## 🎨 Reglas de Estilo Visual Sobrio (Cero Estridencia)
 
-2. **Estilo Visual Sobrio y Académico (Sin Exceso de Color):**
-   - **Paleta sobria y monocromática:** Mantener un diseño formal, técnico y minimalista, evitando el uso de colores vivos, paletas llamativas o elementos visuales estridentes.
-   - **Colores de texto y títulos:** El texto principal debe ser negro estándar (`#000000` o `#333333`). Los títulos y subtítulos deben mantenerse en negro o en gris oscuro neutro sobrio con negrita.
-   - **Tablas:** Cabeceras en gris oscuro sobrio o negro con texto en blanco o negrita, líneas divisorias finas en gris neutro (`#CCCCCC` o `#D3D3D3`) y sombreados alternados muy sutiles en gris claro (`#F8F9FA` / `#F2F2F2`) o blanco.
-   - **Cajas de llamada y recuadros de captura:** Sombreado de fondo tenue en gris neutro claro (`#F5F5F5` / `#F8F9FA`), bordes delgados y limpios en gris oscuro neutro, prescindiendo de barras laterales coloridas o insignias de colores saturados.
-
-3. **Eliminación Total de Guías y Metadatos del Docente:**
-   - Ningún texto explicativo en color rojo (instrucciones de la plantilla) debe permanecer en el entregable final.
-   - Ningún texto de ejemplo en cursiva (como referencias a programadores noveles o ejemplos CRM genéricos) debe permanecer.
-   - Todo el contenido debe pertenecer al caso de estudio específico.
-
-4. **Manejo de Prototipo No Implementado Aún:**
-   - La arquitectura, modelos de datos, productos simulados, clientes, proveedores, almacenes y flujos deben quedar 100% descritos y listos.
-   - Para cada captura requerida, se inserta una caja de llamada visual sobria con borde limpio, sombreado gris claro tenue, título identificador formal, objetivo de la captura y descripción detallada de lo que debe observarse en pantalla una vez ejecutada la configuración en Odoo.
-
+- **Sin colores saturados:** Texto principal en negro (#000000 / #333333), títulos institucionales en azul marino formal (#1B365D / #2B4C7E).
+- **Tablas limpias:** Encabezados en gris oscuro (#2B4C7E o #334155) con texto en blanco, bordes finos (#CBD5E1) y celdas alternadas en gris claro sutil (#F8FAFC).
+- **Cajas de llamada y placeholders:** Fondo gris muy claro (#F8FAFC o #EFF6FF), borde tenue (#CBD5E1) y texto técnico riguroso.
+- **Sin textos de plantilla docente:** Prohibido conservar instrucciones en rojo o ejemplos en cursiva del docente.

@@ -10,7 +10,7 @@ Conclusiones, Referencias, Anexos, Informe y Autoevaluación.
 import docx
 from docx.shared import Inches, Pt, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH
-from report_helpers import (
+from docx_engine import (
     add_heading_1, add_heading_2, add_heading_3,
     add_p, add_bullet, add_callout, add_table_custom, add_screenshot_placeholder
 )

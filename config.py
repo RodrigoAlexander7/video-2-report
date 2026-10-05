@@ -43,7 +43,7 @@ class ReportConfig:
     # Rutas por defecto
     video_path: str = "/home/totora/Documents/PROFESIONAL/video-report/inputs/video/2026-10-04 13-52-34.mp4"
     template_path: str = "/home/totora/Documents/PROFESIONAL/video-report/inputs/input-template.docx"
-    output_path: str = "/home/totora/Documents/PROFESIONAL/video-report/Reporte_Practica_02_Unity.docx"
+    output_path: str = "/home/totora/Documents/PROFESIONAL/video-report/output/unity-practice-02/Reporte_Practica_02_Unity.docx"
     media_dir: str = "/home/totora/Documents/PROFESIONAL/video-report/media"
 
 # Instancia global por defecto
