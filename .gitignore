@@ -48,3 +48,5 @@ media/
 # Videos (keep directory structure with .gitkeep if needed)
 inputs/video/*.mp4
 inputs/video/*.mkv
+
+inputs/
