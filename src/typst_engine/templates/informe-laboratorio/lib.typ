@@ -56,6 +56,7 @@
   feedback: true,
   bibliography: "references.bib", // none/false para omitir
   bib-style: "ieee",
+  heading-indent: 0.6, // sangria en cm por nivel de encabezado (nivel 2 = 1x, nivel 3 = 2x, ...); 0 la desactiva
   max-unbreakable-lines: 36, // listados mas cortos nunca se parten entre paginas
   code-keep-lines: 6, // en listados largos, lineas que se mantienen juntas al inicio y al final
 )
