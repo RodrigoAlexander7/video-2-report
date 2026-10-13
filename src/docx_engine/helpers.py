@@ -1,21 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Generador del Informe Académico Oficial de Negocios Electrónicos (Lab 05)
-Tema: Gestión de la Cadena de Suministro (SCM/ERP) en Distribuidora Inca S.R.L.
-Herramienta de Solución: Odoo Community Edition
-Universidad Nacional de San Agustín de Arequipa (UNSA) - EPIS
-Docente: Dr. Ing. César Basilio Baluarte Araya
+Helpers de formato OpenXML para python-docx.
+
+- Bajo nivel de celda: bordes, sombreado y márgenes.
+- Bloques que se añaden al documento completo (``doc``): encabezados, párrafos,
+  viñetas, llamadas, placeholders de captura y tablas.
+
+Los equivalentes que escriben dentro de una celda de tabla están en
+``cell_helpers.py``.
 """
 
-import os
-import sys
-import docx
 from docx.shared import Inches, Pt, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.enum.table import WD_TABLE_ALIGNMENT
-from docx.oxml import parse_xml, OxmlElement
-from docx.oxml.ns import nsdecls, qn
+from docx.oxml import parse_xml
+from docx.oxml.ns import nsdecls
 
 def set_cell_border(cell, **kwargs):
     """
@@ -281,5 +281,3 @@ def add_table_custom(doc, headers, data, col_widths=None):
                 
     p_spacer = doc.add_paragraph()
     p_spacer.paragraph_format.space_after = Pt(4)
-
-print("Helper functions defined successfully!")
