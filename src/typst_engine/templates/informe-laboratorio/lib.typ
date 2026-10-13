@@ -444,7 +444,14 @@
   _theme.update((accent: accent))
 
   // Encabezados
-  set heading(numbering: "1.")
+  // Numeracion jerarquica: 1.  /  1.1  /  1.1.1  /  a)  (cuarto nivel)
+  set heading(numbering: (..n) => {
+    let nums = n.pos()
+    if nums.len() == 1 { numbering("1.", ..nums) }
+    else if nums.len() <= 3 { nums.map(str).join(".") }
+    else { numbering("a)", nums.last()) }
+  })
+  let indent = cfg.heading-indent * 1cm
   show heading: set text(font: text-fonts)
   show heading.where(level: 1): set text(size: 12pt, weight: "bold")
   show heading.where(level: 1): set block(above: 1.4em, below: 0.9em)
@@ -452,6 +459,10 @@
   show heading.where(level: 2): set block(above: 1.2em, below: 0.8em)
   show heading.where(level: 3): set text(size: 10pt, weight: "bold")
   show heading.where(level: 3): set block(above: 1em, below: 0.7em)
+  show heading.where(level: 4): set text(size: 10pt, weight: "bold", style: "italic")
+  show heading.where(level: 4): set block(above: 0.9em, below: 0.6em)
+  // Sangria por nivel: el nivel 1 va al margen y cada nivel inferior se desplaza un paso mas
+  show heading: it => if it.level > 1 { pad(left: indent * (it.level - 1), it) } else { it }
 
   // Codigo: fuente mono fija; bloques con inset 0.8em que no se parten mal
   show raw: set text(font: mono-fonts)

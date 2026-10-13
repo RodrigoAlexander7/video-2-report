@@ -43,6 +43,8 @@ DEFAULT_SECTIONS = (
 # Carpetas del proyecto que se copian al directorio de trabajo si existen.
 DEFAULT_COPY = ("content", "figures", "evidence", "code", "assets")
 FONT_FALLBACKS = ["Lato", "Liberation Sans", "DejaVu Sans", "Libertinus Serif"]
+# "Times New Roman" suele no estar en Linux: Liberation Serif y Tinos son metricamente compatibles.
+SERIF_FAMILIES = ["Times New Roman", "Liberation Serif", "Tinos", "Libertinus Serif"]
 MONO_FALLBACKS = ["DejaVu Sans Mono", "Liberation Mono", "Cascadia Mono"]
 
 # Claves de [lab] y [build] que pasan tal cual a config.json (la plantilla define los defaults).
@@ -53,7 +55,7 @@ LAB_KEYS = (
 )
 BUILD_KEYS = (
     "toc", "list-of-figures", "feedback", "results-title", "bib-style", "accent",
-    "max-unbreakable-lines", "code-keep-lines",
+    "max-unbreakable-lines", "code-keep-lines", "heading-indent",
 )
 REQUIRED_LAB = ("course", "title", "number", "instructor", "members")
 
@@ -204,7 +206,11 @@ def build(project_dir, out_dir=None, inputs: Optional[Mapping[str, object]] = No
     # ---- config.json ----
     config: dict = {k: lab[k] for k in LAB_KEYS if k in lab}
     config.update({k: bld[k] for k in BUILD_KEYS if k in bld})
-    config["font"] = _font_stack(bld.get("font"), FONT_FALLBACKS, available)
+    requested = bld.get("font")
+    first = (requested[0] if isinstance(requested, list) and requested else requested) or ""
+    is_serif = isinstance(first, str) and first.lower() in {f.lower() for f in SERIF_FAMILIES}
+    config["font"] = _font_stack(SERIF_FAMILIES if is_serif else requested,
+                                 FONT_FALLBACKS if not is_serif else ["DejaVu Serif"], available)
     config["mono-font"] = _font_stack(bld.get("mono-font"), MONO_FALLBACKS, available)
     config.setdefault("results-title", "SOLUCIÓN Y RESULTADOS")
     bib = bld.get("bibliography", "references.bib")
