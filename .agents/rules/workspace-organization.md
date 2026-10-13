@@ -14,12 +14,19 @@ All agents, subagents, and automated scripts operating within this repository MU
   └── <report-name>.docx  # (If Word) Final compiled DOCX
   ```
 
+Evidence captured from real commands lives in `output/<report-slug>/evidence/` (`manifest.json`, `.log`, `.png`); the report build reads figures from there. Never draw or edit result screenshots by hand: use `main.py evidence` (see the `terminal-evidence` skill).
+
 ## 2. Temporary & Intermediate Artifacts
 - Audio files (`*.wav`), temporary transcription JSONs/TXTs, and model download caches MUST be stored in:
   `output/.cache/` or `<appDataDir>/brain/<conversation-id>/scratch/`.
 - Never create ad-hoc scratch scripts in the root directory (such as `test_*.py`, `transcribe_*.py`, `crop_*.py`). Execute Python one-liners directly or use `scratch/`.
 - Do NOT create multiple duplicate folders like `media_manual`, `media_manual_clean`, etc. Clean and process images directly in `output/<report-slug>/figures/`.
 
-## 3. Git Cleanliness
+## 3. Inputs, Tests and Docs
+- Each case has its own directory under `inputs/<slug>/` with an optional `project.toml` that names the pipeline and its options (`main.py list`, `main.py describe <pipeline>`).
+- Automated tests live in `tests/` and run with `python -m unittest discover -s tests -t .`.
+- Per-case documentation lives in `docs/`.
+
+## 4. Git Cleanliness
 - The `.gitignore` is configured to ignore `output/`, `media/`, `*.wav`, `*.mp3`, `*.pdf`, and `inputs/video/*.mp4`.
 - Under no circumstances should raw videos, heavy media files, or transient intermediate states be committed to Git.
