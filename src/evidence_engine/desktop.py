@@ -56,6 +56,42 @@ def _color(line: str):
     return FG, False
 
 
+def _background(theme: str, screen: Tuple[int, int]):
+    """Fondo del escritorio. Devuelve (imagen, alto barra superior, alto barra inferior, ancho del dock)."""
+    ubuntu = theme == "ubuntu"
+    top_h, bottom_h, dock_w = (36, 0, 84) if ubuntu else (0, 64, 0)
+    img = _gradient(screen, (44, 0, 30), (233, 84, 32)) if ubuntu else _gradient(screen, (8, 40, 92), (30, 120, 200))
+    return img, top_h, bottom_h, dock_w
+
+
+def _bars(img: Image.Image, theme: str, when: datetime, screen: Tuple[int, int]) -> None:
+    """Barra del sistema y dock; el reloj muestra el momento real de la captura."""
+    sw, sh = screen
+    ubuntu = theme == "ubuntu"
+    top_h, bottom_h, dock_w = (36, 0, 84) if ubuntu else (0, 64, 0)
+    d = ImageDraw.Draw(img, "RGBA")
+    ui, ui_b = _font(_UI, 17), _font(_UI_BOLD, 17)
+    clock = f"{_DAYS[when.weekday()]} {when.day:02d} {_MONTHS[when.month - 1]}  {when:%H:%M}"
+    if ubuntu:
+        d.rectangle([0, 0, sw, top_h], fill=(18, 18, 18, 235))
+        d.text((16, 8), "Actividades", font=ui, fill=(235, 235, 235))
+        d.text((sw // 2 - ui_b.getlength(clock) / 2, 8), clock, font=ui_b, fill=(235, 235, 235))
+        d.rectangle([0, top_h, dock_w, sh], fill=(30, 30, 30, 215))
+        for i, c in enumerate([(233, 84, 32), (90, 160, 230), (110, 200, 120), (240, 190, 60), (170, 120, 210)]):
+            iy = top_h + 28 + i * 74
+            d.rounded_rectangle([18, iy, 66, iy + 48], radius=12, fill=c)
+        d.rounded_rectangle([18, top_h + 28, 66, top_h + 76], radius=12, outline=(255, 255, 255, 200), width=2)
+    else:
+        d.rectangle([0, sh - bottom_h, sw, sh], fill=(20, 28, 40, 235))
+        start = sw // 2 - 190
+        for i, c in enumerate([(0, 120, 215), (90, 160, 230), (110, 200, 120), (240, 190, 60), (200, 70, 70), (170, 120, 210)]):
+            ix = start + i * 64
+            d.rounded_rectangle([ix, sh - bottom_h + 12, ix + 40, sh - bottom_h + 52], radius=8, fill=c)
+        d.text((sw - 150, sh - bottom_h + 10), f"{when:%H:%M}", font=ui_b, fill=(235, 235, 235))
+        d.text((sw - 150, sh - bottom_h + 34), f"{when.day:02d}/{when.month:02d}/{when.year}", font=ui, fill=(210, 210, 210))
+
+
+
 def render_desktop(transcript: str, title: str, out_path: str, theme: str = "ubuntu",
                    when: Optional[datetime] = None, screen: Tuple[int, int] = SCREEN) -> str:
     if theme not in THEMES:
@@ -65,8 +101,7 @@ def render_desktop(transcript: str, title: str, out_path: str, theme: str = "ubu
     ubuntu = theme == "ubuntu"
     top_h, bottom_h, dock_w = (36, 0, 84) if ubuntu else (0, 64, 0)
 
-    # --- fondo ---
-    img = _gradient(screen, (44, 0, 30), (233, 84, 32)) if ubuntu else _gradient(screen, (8, 40, 92), (30, 120, 200))
+    img, top_h, bottom_h, dock_w = _background(theme, screen)
     d = ImageDraw.Draw(img, "RGBA")
     ui, ui_b = _font(_UI, 17), _font(_UI_BOLD, 17)
 
@@ -114,25 +149,7 @@ def render_desktop(transcript: str, title: str, out_path: str, theme: str = "ubu
         d.text((win_x0 + pad, y), line, font=mono_b if bold else mono, fill=color)
         y += lh
 
-    # --- barra del sistema (reloj = momento real de la captura) ---
-    clock = f"{_DAYS[when.weekday()]} {when.day:02d} {_MONTHS[when.month - 1]}  {when:%H:%M}"
-    if ubuntu:
-        d.rectangle([0, 0, sw, top_h], fill=(18, 18, 18, 235))
-        d.text((16, 8), "Actividades", font=ui, fill=(235, 235, 235))
-        d.text((sw // 2 - ui_b.getlength(clock) / 2, 8), clock, font=ui_b, fill=(235, 235, 235))
-        d.rectangle([0, top_h, dock_w, sh], fill=(30, 30, 30, 215))
-        for i, c in enumerate([(233, 84, 32), (90, 160, 230), (110, 200, 120), (240, 190, 60), (170, 120, 210)]):
-            iy = top_h + 28 + i * 74
-            d.rounded_rectangle([18, iy, 66, iy + 48], radius=12, fill=c)
-        d.rounded_rectangle([18, top_h + 28, 66, top_h + 76], radius=12, outline=(255, 255, 255, 200), width=2)
-    else:
-        d.rectangle([0, sh - bottom_h, sw, sh], fill=(20, 28, 40, 235))
-        start = sw // 2 - 190
-        for i, c in enumerate([(0, 120, 215), (90, 160, 230), (110, 200, 120), (240, 190, 60), (200, 70, 70), (170, 120, 210)]):
-            ix = start + i * 64
-            d.rounded_rectangle([ix, sh - bottom_h + 12, ix + 40, sh - bottom_h + 52], radius=8, fill=c)
-        d.text((sw - 150, sh - bottom_h + 10), f"{when:%H:%M}", font=ui_b, fill=(235, 235, 235))
-        d.text((sw - 150, sh - bottom_h + 34), f"{when.day:02d}/{when.month:02d}/{when.year}", font=ui, fill=(210, 210, 210))
+    _bars(img, theme, when, screen)
 
     os.makedirs(os.path.dirname(os.path.abspath(out_path)), exist_ok=True)
     img.save(out_path)

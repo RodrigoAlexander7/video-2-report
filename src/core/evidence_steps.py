@@ -36,7 +36,7 @@ def capture_declared(project_dir: Path, evidence_dir: Path) -> List[str]:
         script = read_script(str((project_dir / s["script"]).resolve()))
         ev.capture_vdmj(s["name"], specs, script, str(evidence_dir),
                         dialect=cfg.get("dialect", "vdmpp"), release=cfg.get("release", "classic"),
-                        cwd=str(project_dir), screen=cfg.get("screen"))
+                        cwd=str(project_dir), screen=cfg.get("screen"), window=cfg.get("window"))
         names.append(s["name"])
         print(f"  evidencia: {s['name']}")
     return names

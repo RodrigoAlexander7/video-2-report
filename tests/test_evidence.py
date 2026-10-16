@@ -83,3 +83,20 @@ class DesktopRenderTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             with self.assertRaises(ValueError):
                 render_desktop("x", "t", os.path.join(d, "a.png"), theme="beos")
+
+
+class ToolboxFrameTests(unittest.TestCase):
+    def test_toolbox_window_is_marked_and_full_screen(self):
+        from PIL import Image
+        from src.evidence_engine.capture import _finish
+        meta = {"tool": "vdmj", "commands": [], "returncodes": [0], "spec_files": ["A.vpp"]}
+        with tempfile.TemporaryDirectory() as d:
+            item = _finish(d, "x", "> print 1\n= 1", "t", meta, screen="ubuntu", window="toolbox")
+            self.assertEqual(item["render"], "toolbox-frame")
+            self.assertEqual(Image.open(os.path.join(d, item["image"])).size, (1920, 1080))
+
+    def test_long_transcript_keeps_the_tail_like_a_scrolling_window(self):
+        from src.evidence_engine.toolbox import _fit
+        _, visible = _fit("\n".join(f"linea {i}" for i in range(100)))
+        self.assertEqual(visible[-1], "linea 99")
+        self.assertLess(len(visible), 100)

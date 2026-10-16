@@ -13,15 +13,20 @@ from typing import Dict, List, Optional, Sequence
 from . import manifest as mf
 from .desktop import render_desktop
 from .render import render_terminal
+from .toolbox import render_toolbox
 
 
-def _finish(out_dir: str, name: str, transcript: str, title: str, meta: Dict, screen: Optional[str] = None) -> Dict:
+def _finish(out_dir: str, name: str, transcript: str, title: str, meta: Dict, screen: Optional[str] = None,
+            window: Optional[str] = None) -> Dict:
     os.makedirs(out_dir, exist_ok=True)
     log = os.path.join(out_dir, f"{name}.log")
     png = os.path.join(out_dir, f"{name}.png")
     with open(log, "w", encoding="utf-8") as f:
         f.write(transcript + "\n")
-    if screen:
+    if screen and window == "toolbox":
+        render_toolbox(transcript, title, png, files=meta.get("spec_files", []), theme=screen)
+        meta = {**meta, "render": "toolbox-frame", "theme": screen}  # composición: texto real de VDMJ, marco del Toolbox
+    elif screen:
         render_desktop(transcript, title, png, theme=screen)
         meta = {**meta, "render": "desktop-frame", "theme": screen}  # composición: el texto es real, el marco no
     else:
@@ -64,7 +69,7 @@ def capture_commands(name: str, commands: Sequence[str], out_dir: str, cwd: Opti
 
 def capture_vdmj(name: str, spec_files: List[str], commands: List[str], out_dir: str,
                  dialect: str = "vdmpp", release: str = "classic", cwd: Optional[str] = None,
-                 screen: Optional[str] = None) -> Dict:
+                 screen: Optional[str] = None, window: Optional[str] = None) -> Dict:
     """Sesión interactiva real de VDMJ: el intérprete recibe los comandos y se registra su respuesta."""
     from .vdmj import run_session
 
@@ -72,7 +77,7 @@ def capture_vdmj(name: str, spec_files: List[str], commands: List[str], out_dir:
     title = f"$ {session.command_line}   ({session.version}, salida real)"
     return _finish(out_dir, name, session.transcript, title,
                    {"tool": session.version, "commands": list(commands), "spec_files": [os.path.basename(s) for s in spec_files],
-                    "returncodes": [session.returncode]}, screen=screen)
+                    "returncodes": [session.returncode]}, screen=screen, window=window)
 
 
 def register_image(item_id: str, image_path: str, out_dir: str, source: str = "manual",
