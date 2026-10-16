@@ -65,3 +65,21 @@ class EvidenceTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class DesktopRenderTests(unittest.TestCase):
+    def test_full_screen_image_is_marked_as_composition(self):
+        from PIL import Image
+        from src.evidence_engine import capture_vdmj  # noqa: F401  (API pública disponible)
+        from src.evidence_engine.capture import _finish
+        with tempfile.TemporaryDirectory() as d:
+            item = _finish(d, "x", "> print 1\n= 1", "t", {"tool": "t", "commands": [], "returncodes": [0]}, screen="ubuntu")
+            self.assertEqual(item["render"], "desktop-frame")
+            self.assertEqual(Image.open(os.path.join(d, item["image"])).size, (1920, 1080))
+            self.assertEqual([i for i in verify_manifest(d) if i.level == "error"], [])
+
+    def test_unknown_theme_is_rejected(self):
+        from src.evidence_engine.desktop import render_desktop
+        with tempfile.TemporaryDirectory() as d:
+            with self.assertRaises(ValueError):
+                render_desktop("x", "t", os.path.join(d, "a.png"), theme="beos")
