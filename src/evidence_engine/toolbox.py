@@ -4,8 +4,8 @@
 La apariencia (menús, barras de iconos, Manager, Interpreter Window, Trace, BreakPoints)
 sale de una captura real del Toolbox (assets/toolbox_template.png). El texto que se dibuja
 encima (árbol de archivos y transcripción del intérprete) es la salida literal de la
-ejecución con VDMJ; no se traduce al formato del Toolbox. La ventana lleva un título
-propio que nombra a VDMJ. Es una composición: el manifiesto la registra como
+ejecución con VDMJ; no se traduce al formato del Toolbox. La ventana ocupa toda la
+pantalla y lleva una franja de título que nombra a VDMJ. Es una composición: el manifiesto la registra como
 render = "toolbox-frame".
 """
 
@@ -20,7 +20,6 @@ from . import desktop as dk
 from .render import _BOLD_CANDIDATES, _FONT_CANDIDATES, _font
 
 TEMPLATE = os.path.join(os.path.dirname(__file__), "assets", "toolbox_template.png")
-SCALE = 0.96
 TITLE_H = 30
 # Geometría dentro de la plantilla (px nativos del Toolbox)
 TEXT_X, TEXT_Y0, LINE_H, TEXT_BOTTOM, TEXT_RIGHT = 328, 119, 19, 506, 1796
@@ -70,27 +69,20 @@ def render_toolbox(transcript: str, title: str, out_path: str, files: Sequence[s
         y += LINE_H
     d.text((TEXT_X, 516), ">", font=_font(_BOLD_CANDIDATES, 15), fill=(0, 0, 0))
 
-    ww, wh = int(win.width * SCALE), int(win.height * SCALE)
-    win = win.resize((ww, wh), Image.LANCZOS)
-
-    img, top_h, bottom_h, dock_w = dk._background(theme, screen)
+    # Ventana maximizada: ocupa toda la pantalla (sin dock ni barras del escritorio); solo queda una
+    # franja de título que nombra a VDMJ y el comando.
     sw, sh = screen
-    x0 = dock_w + (sw - dock_w - ww) // 2
-    y0 = top_h + (sh - top_h - bottom_h - wh - TITLE_H) // 2
-    d2 = ImageDraw.Draw(img, "RGBA")
-    for i in range(14, 0, -2):
-        d2.rounded_rectangle([x0 - i, y0 - i + 8, x0 + ww + i, y0 + TITLE_H + wh + i + 8], radius=10 + i, fill=(0, 0, 0, 10))
-    d2.rectangle([x0, y0, x0 + ww, y0 + TITLE_H], fill=(58, 58, 64))
+    img = Image.new("RGB", screen, (58, 58, 64))
+    d2 = ImageDraw.Draw(img)
     ui_b = _font(dk._UI_BOLD, 15)
     shown = title
-    while ui_b.getlength(shown) > ww - 200 and len(shown) > 8:
+    while ui_b.getlength(shown) > sw - 240 and len(shown) > 8:
         shown = shown[:-4] + "…"
-    d2.text((x0 + ww // 2 - ui_b.getlength(shown) / 2, y0 + 6), shown, font=ui_b, fill=(235, 235, 235))
+    d2.text((sw // 2 - ui_b.getlength(shown) / 2, 6), shown, font=ui_b, fill=(235, 235, 235))
     for k, c in enumerate([(120, 120, 120), (120, 120, 120), (233, 84, 32)]):
-        cx = x0 + ww - 24 - k * 26
-        d2.ellipse([cx - 8, y0 + TITLE_H // 2 - 8, cx + 8, y0 + TITLE_H // 2 + 8], fill=c)
-    img.paste(win, (x0, y0 + TITLE_H))
-    dk._bars(img, theme, when, screen)
+        cx = sw - 24 - k * 26
+        d2.ellipse([cx - 8, TITLE_H // 2 - 8, cx + 8, TITLE_H // 2 + 8], fill=c)
+    img.paste(win.resize((sw, sh - TITLE_H), Image.LANCZOS), (0, TITLE_H))
 
     os.makedirs(os.path.dirname(os.path.abspath(out_path)), exist_ok=True)
     img.save(out_path)
