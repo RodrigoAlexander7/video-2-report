@@ -120,6 +120,20 @@ def _run_unity_lab06(p: Plan) -> List[str]:
     return [p["output"]]
 
 
+def _plan_unity_lab07(d: Path, o: Dict[str, Any], slug: str) -> Plan:
+    out = _out_dir(slug)
+    return {"template": _required(d, o, "template", "*.docx"),
+            "output": _path(d, o["output"]) if "output" in o else str(out / "Reporte_Practica_07_Unity.docx"),
+            "media": _path(d, o["media"]) if "media" in o else str(out / "figures")}
+
+
+def _run_unity_lab07(p: Plan) -> List[str]:
+    script = REPO_ROOT / "src/reports/unity_practice/generate_lab07_report.py"
+    subprocess.run([sys.executable, str(script), "--template", p["template"], "--output", p["output"],
+                    "--media", p["media"]], cwd=REPO_ROOT, check=True)
+    return [p["output"]]
+
+
 def _plan_epis_ne(d: Path, o: Dict[str, Any], slug: str) -> Plan:
     return {"template": _required(d, o, "template", "*.docx"),
             "output": _path(d, o["output"]) if "output" in o else str(_out_dir(slug) / "Informe_Lab05_Distribuidora_Inca_SCM.docx")}
@@ -200,6 +214,11 @@ PIPELINES: Dict[str, Pipeline] = {pl.name: pl for pl in [
              requires=(), accepts=("*.docx", "*.mp4", "project.toml"), produces="output/<slug>/Reporte_Practica_06_Unity.docx",
              template="plantilla .docx del directorio; figuras ya generadas en output/<slug>/figures",
              example="main.py run inputs/IDSE/lab06 --pipeline unity-lab06", plan=_plan_unity_lab06, run=_run_unity_lab06,
+             auto=False),
+    Pipeline("unity-lab07", "Reporte de la Práctica 07 de Unity (Audio Source y Sonidos), 5 etapas.",
+             requires=(), accepts=("*.docx", "*.mp4", "source-code.cs", "project.toml"), produces="output/<slug>/Reporte_Practica_07_Unity.docx",
+             template="plantilla .docx del directorio o heredada; figuras ya generadas en output/<slug>/figures",
+             example="main.py run inputs/IDSE/lab07 --pipeline unity-lab07", plan=_plan_unity_lab07, run=_run_unity_lab07,
              auto=False),
     Pipeline("epis-ne", "Informe institucional EPIS de Negocios Electrónicos (16 secciones obligatorias).",
              requires=("StudyCase.md",), accepts=("*.docx",), produces="output/<slug>/Informe_Lab05_Distribuidora_Inca_SCM.docx",
