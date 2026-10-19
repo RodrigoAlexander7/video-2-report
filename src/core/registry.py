@@ -160,6 +160,22 @@ def _has_lab_table(d: Path) -> bool:
     return "lab" in load_project(d)
 
 
+def _plan_typst_theory(d: Path, o: Dict[str, Any], slug: str) -> Plan:
+    return {"project_dir": str(d), "out_dir": _path(d, o["out_dir"]) if "out_dir" in o else str(_out_dir(slug) / "build"),
+            "evidence_dir": _path(d, o["evidence_dir"]) if "evidence_dir" in o else str(_out_dir(slug) / "evidence")}
+
+
+def _run_typst_theory(p: Plan) -> List[str]:
+    from src.reports.typst_theory import build
+    project_dir, evidence_dir = Path(p["project_dir"]), Path(p["evidence_dir"])
+    return [str(build(project_dir, p["out_dir"], evidence_dir=evidence_dir))]
+
+
+def _has_theory_table(d: Path) -> bool:
+    proj = load_project(d)
+    return "theory" in proj or proj.get("pipeline") == "typst-theory"
+
+
 def _plan_html_slides(d: Path, o: Dict[str, Any], slug: str) -> Plan:
     return {"project_dir": str(d), "out_dir": _path(d, o["out_dir"]) if "out_dir" in o else str(_out_dir(slug) / "build"),
             "evidence_dir": _path(d, o["evidence_dir"]) if "evidence_dir" in o else str(_out_dir(slug) / "evidence")}
@@ -199,6 +215,11 @@ PIPELINES: Dict[str, Pipeline] = {pl.name: pl for pl in [
              produces="output/<slug>/build/<caso>.pdf", template="paquete informe-laboratorio (src/typst_engine)",
              example="main.py typst-lab new inputs/mi-lab && main.py run inputs/mi-lab",
              plan=_plan_typst_lab, run=_run_typst_lab, predicate=_has_lab_table),
+    Pipeline("typst-theory", "Informe formal de teoría y trabajo parcial en Typst/PDF.",
+             requires=("project.toml",), accepts=("content/*.typ", "figures/", "evidence/"),
+             produces="output/<slug>/build/<caso>.pdf", template="paquete informe-teoria (src/typst_engine)",
+             example="main.py run inputs/Calidad-Software/Actividad05 --pipeline typst-theory",
+             plan=_plan_typst_theory, run=_run_typst_theory, predicate=_has_theory_table),
     Pipeline("html-slides", "Diapositivas HTML (siempre en tema claro, sin animaciones) y PDF.",
              requires=("project.toml",), accepts=("content/slides.toml", "figures/", "evidence/", "code/"),
              produces="output/<slug>/build/<caso>-slides.html + .pdf (una diapositiva por página, 1920x1080)",
