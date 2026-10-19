@@ -885,6 +885,7 @@ source = { virtual = "." }
 dependencies = [
     { name = "docxtpl" },
     { name = "faster-whisper" },
+    { name = "jinja2" },
     { name = "pillow" },
     { name = "python-docx" },
     { name = "scipy" },
@@ -895,6 +896,7 @@ dependencies = [
 requires-dist = [
     { name = "docxtpl", specifier = ">=0.20.2" },
     { name = "faster-whisper", specifier = ">=1.2.1" },
+    { name = "jinja2", specifier = ">=3.1" },
     { name = "pillow", specifier = ">=12.3.0" },
     { name = "python-docx", specifier = ">=1.2.0" },
     { name = "scipy", specifier = ">=1.18.1" },

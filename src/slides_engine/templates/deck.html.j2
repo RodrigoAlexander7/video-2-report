@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="{{ meta.lang }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>{{ meta.title }}</title>
+<style>
+{{ css }}
+</style>
+</head>
+<body>
+<main class="deck">
+{% for s in slides %}
+{% set n = loop.index %}
+<section class="slide layout-{{ s.layout }}" id="slide-{{ n }}" aria-label="{{ labels.slide }} {{ n }}">
+<div class="slide-inner">
+{% include "layouts/" ~ s.layout ~ ".html.j2" %}
+</div>
+{% if s.notes %}<aside class="notes">{{ s.notes|inline }}</aside>{% endif %}
+</section>
+{% endfor %}
+</main>
+</body>
+</html>

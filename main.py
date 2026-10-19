@@ -63,7 +63,14 @@ def cmd_run(args):
     if args.dry_run:
         print("(dry-run: no se ejecutó nada)")
         return
-    for path in pipeline.run(plan):
+    try:
+        outputs = pipeline.run(plan)
+    except Exception as exc:
+        from src.slides_engine import BrowserError, DeckError   # solo en la ruta de error
+        if isinstance(exc, (BrowserError, DeckError)):
+            sys.exit(f"Error en {pipeline.name}:\n{exc}")
+        raise
+    for path in outputs:
         print(f"✓ {path}")
 
 
@@ -147,6 +154,24 @@ def run_typst_lab(args):
         cmd_run(argparse.Namespace(inputs=args.project_dir, pipeline="typst-lab", dry_run=False))
 
 
+def run_slides(args):
+    from src.reports import html_slides
+    if args.action == "new":
+        try:
+            print(f"✓ Esqueleto creado en {html_slides.scaffold(args.project_dir)}")
+        except FileExistsError as exc:
+            sys.exit(f"Error: {exc}")
+    elif args.action == "check":
+        from src.slides_engine import DeckError
+        try:
+            html_slides.check(args.project_dir)
+        except (DeckError, FileNotFoundError, ValueError) as exc:
+            sys.exit(f"Error en html-slides:\n{exc}")
+        print("✓ Contenido, tema y reglas (claro, sin animaciones) correctos. Chrome mide los desbordes en `build`.")
+    else:
+        cmd_run(argparse.Namespace(inputs=args.project_dir, pipeline="html-slides", dry_run=False))
+
+
 # ------------------------------------------------------------------------------- parser
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Generador de reportes por casos (inputs -> pipeline -> output)")
@@ -219,6 +244,12 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("action", choices=["new", "build"])
     p.add_argument("project_dir")
     p.set_defaults(func=run_typst_lab)
+
+    p = sub.add_parser("slides", help="Diapositivas HTML (tema claro, sin animaciones) + PDF")
+    p.add_argument("action", choices=["new", "check", "build"],
+                   help="new: esqueleto; check: valida contenido/tema sin Chrome; build: HTML + PDF")
+    p.add_argument("project_dir")
+    p.set_defaults(func=run_slides)
     return parser
 
 

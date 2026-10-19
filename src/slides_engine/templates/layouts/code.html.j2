@@ -1,0 +1,9 @@
+{% from "_macros.html.j2" import head, foot %}
+{{ head(s) }}
+<div class="slide-body">
+  <div class="code-wrap">
+    <div class="code-block">{% if s.language %}<span class="code-lang">{{ s.language }}</span>{% endif %}<pre><code>{{ s.code_text }}</code></pre></div>
+    {% if s.caption %}<p class="caption">{{ s.caption|inline }}</p>{% endif %}
+  </div>
+</div>
+{{ foot(meta, logos, n, total) }}

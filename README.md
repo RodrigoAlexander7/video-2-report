@@ -18,6 +18,7 @@ python main.py run inputs/NE/Lab05 --dry-run   # muestra qué usaría, sin ejecu
 | `epis-ne` | `StudyCase.md` + plantilla EPIS `.docx` | informe de 16 secciones | [docs/cases/epis-ne.md](docs/cases/epis-ne.md) |
 | `epis-ne-short` | `input-template.docx` (explícito) | informe corto de la guía | [docs/cases/epis-ne.md](docs/cases/epis-ne.md) |
 | `typst-lab` | `project.toml` con `[lab]`, `content/*.typ`, specs y scripts | PDF con evidencia real | [docs/cases/typst-lab.md](docs/cases/typst-lab.md) |
+| `html-slides` | `project.toml` con `[slides]` y `content/slides.toml` | HTML + PDF de diapositivas, tema claro y sin animaciones | [docs/cases/html-slides.md](docs/cases/html-slides.md) |
 
 `inputs/templates/user-manual.typ` y `output/autocad-addin-manual/` corresponden al generador de manuales de AutoCAD, función **deprecada**: se conserva, pero ya no recibe mantenimiento ni está registrada como pipeline.
 
@@ -30,9 +31,10 @@ src/
   core/            Registro de pipelines, detección por inputs, project.toml
   docx_engine/     Helpers python-docx (documento y celda) e inspector de .docx
   typst_engine/    Compilador Typst y plantilla informe-laboratorio
+  slides_engine/   Diapositivas HTML: modelo, render Jinja2, reglas (tema claro, sin animaciones) y Chrome
   video_engine/    Transcripción (faster-whisper), timeline y extracción de figuras/GIFs
   evidence_engine/ Evidencia real: comandos/VDMJ -> log + figura + manifiesto verificable
-  reports/         Un paquete por caso (epis_ne, unity_practice, typst_lab)
+  reports/         Un paquete por caso (epis_ne, unity_practice, typst_lab, html_slides)
 tests/             Pruebas automáticas (unittest)
 docs/cases/        Documentación de cada caso
 inputs/<caso>/     Material de entrada (no versionado)
@@ -47,7 +49,7 @@ Las figuras de resultados salen de ejecuciones reales y quedan registradas en `o
 ## Instalación
 
 ```bash
-sudo apt install -y ffmpeg gifsicle poppler-utils   # y Typst (https://typst.app) para typst-lab
+sudo apt install -y ffmpeg gifsicle poppler-utils   # y Typst (https://typst.app) para typst-lab; Chrome/Chromium para html-slides
 uv sync
 ```
 
@@ -65,3 +67,4 @@ python -m unittest discover -s tests -t .
 2. Reutiliza `src/docx_engine`, `src/typst_engine`, `src/video_engine` y `src/evidence_engine` en lugar de duplicar helpers.
 3. Nunca dibujes ni edites capturas de resultados: usa `main.py evidence`.
 4. Estilo académico y sobrio, sin colores llamativos. Reglas de redacción en `.agents/skills/lab-report-writing`.
+5. Diapositivas: siempre en tema claro y sin animaciones (`.agents/skills/academic-slides-builder`).

@@ -160,6 +160,21 @@ def _has_lab_table(d: Path) -> bool:
     return "lab" in load_project(d)
 
 
+def _plan_html_slides(d: Path, o: Dict[str, Any], slug: str) -> Plan:
+    return {"project_dir": str(d), "out_dir": _path(d, o["out_dir"]) if "out_dir" in o else str(_out_dir(slug) / "build"),
+            "evidence_dir": _path(d, o["evidence_dir"]) if "evidence_dir" in o else str(_out_dir(slug) / "evidence")}
+
+
+def _run_html_slides(p: Plan) -> List[str]:
+    from src.reports.html_slides import build
+    return [str(build(p["project_dir"], p["out_dir"], evidence_dir=p["evidence_dir"]))]
+
+
+def _has_slides_table(d: Path) -> bool:
+    proj = load_project(d)
+    return "slides" in proj or proj.get("pipeline") == "html-slides"
+
+
 PIPELINES: Dict[str, Pipeline] = {pl.name: pl for pl in [
     Pipeline("video-report", "Reporte Word por etapas a partir de un video (figuras anotadas y GIFs).",
              requires=("*.mp4",), accepts=("*.docx", "project.toml"), produces="<output>/<slug>/Reporte_<caso>.docx + figures/",
@@ -184,6 +199,12 @@ PIPELINES: Dict[str, Pipeline] = {pl.name: pl for pl in [
              produces="output/<slug>/build/<caso>.pdf", template="paquete informe-laboratorio (src/typst_engine)",
              example="main.py typst-lab new inputs/mi-lab && main.py run inputs/mi-lab",
              plan=_plan_typst_lab, run=_run_typst_lab, predicate=_has_lab_table),
+    Pipeline("html-slides", "Diapositivas HTML (siempre en tema claro, sin animaciones) y PDF.",
+             requires=("project.toml",), accepts=("content/slides.toml", "figures/", "evidence/", "code/"),
+             produces="output/<slug>/build/<caso>-slides.html + .pdf (una diapositiva por página, 1920x1080)",
+             template="tema academic-light (src/slides_engine/assets/themes)",
+             example="main.py slides new inputs/mi-deck && main.py run inputs/mi-deck",
+             plan=_plan_html_slides, run=_run_html_slides, predicate=_has_slides_table),
 ]}
 
 

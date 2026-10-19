@@ -1,0 +1,8 @@
+{% from "_macros.html.j2" import head, foot %}
+{{ head(s) }}
+<div class="slide-body">
+  <div class="stats-grid">
+    {% for it in s.entries %}<div class="stat-card"><div class="stat-value">{{ it.value }}</div><div class="stat-label">{{ it.label|inline }}</div></div>{% endfor %}
+  </div>
+</div>
+{{ foot(meta, logos, n, total) }}

@@ -1,0 +1,12 @@
+{% from "_macros.html.j2" import head, foot %}
+{{ head(s) }}
+<div class="slide-body">
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr>{% for h in s.header %}<th scope="col">{{ h|inline }}</th>{% endfor %}</tr></thead>
+      <tbody>{% for row in s.rows %}<tr>{% for cell in row %}<td>{{ cell|string|inline }}</td>{% endfor %}</tr>{% endfor %}</tbody>
+    </table>
+    {% if s.caption %}<p class="caption"><b>{{ labels.table }} {{ s.tab_no }}.</b> {{ s.caption|inline }}</p>{% endif %}
+  </div>
+</div>
+{{ foot(meta, logos, n, total) }}

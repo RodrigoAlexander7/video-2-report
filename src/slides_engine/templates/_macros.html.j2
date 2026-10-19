@@ -1,0 +1,15 @@
+{% macro head(s) -%}
+<header class="slide-head"><h2 class="slide-title">{{ s.title|inline }}</h2></header>
+{%- endmacro %}
+
+{% macro foot(meta, logos, n, total) -%}
+<footer class="slide-footer">
+{% if logos %}<img class="foot-logo" src="{{ logos.epis }}" alt="EPIS">{% endif %}
+<span class="foot-text">{{ meta.footer }}</span>
+<span class="foot-num">{{ n }} / {{ total }}</span>
+</footer>
+{%- endmacro %}
+
+{% macro logos_row(logos) -%}
+{% if logos %}<img class="logo-unsa" src="{{ logos.unsa }}" alt="UNSA"><img class="logo-epis" src="{{ logos.epis }}" alt="EPIS">{% else %}<span></span>{% endif %}
+{%- endmacro %}

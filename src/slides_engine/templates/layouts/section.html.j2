@@ -1,0 +1,7 @@
+{% from "_macros.html.j2" import foot %}
+<div class="section-wrap">
+  {% if s.number %}<div class="section-number">{{ s.number }}</div>{% endif %}
+  <h2 class="section-title">{{ s.title|inline }}</h2>
+  {% if s.subtitle %}<p class="section-sub">{{ s.subtitle|inline }}</p>{% endif %}
+</div>
+{{ foot(meta, logos, n, total) }}

@@ -1,0 +1,10 @@
+{% from "_macros.html.j2" import logos_row %}
+<div class="cover">
+  <div class="cover-top">{{ logos_row(logos) }}</div>
+  <div class="cover-main">
+    <h1 class="cover-title">{{ s.title|inline }}</h1>
+    {% if s.subtitle %}<p class="cover-subtitle">{{ s.subtitle|inline }}</p>{% endif %}
+    {% if s.entries %}<ul class="closing-list">{% for it in s.entries %}<li>{{ it|inline }}</li>{% endfor %}</ul>{% endif %}
+  </div>
+  <div class="cover-meta"><div class="meta-authors">{{ meta.footer }}</div><div class="meta-info">{{ n }} / {{ total }}</div></div>
+</div>

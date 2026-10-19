@@ -1,0 +1,47 @@
+/* Tema academic-light — claro, sobrio, institucional (EPIS - UNSA).
+   Estilo base: Swiss Modernism 2.0 (ui-ux-pro-max), azul marino + granate UNSA, titulares con serif.
+   Tres capas de tokens: primitivos -> semánticos (--color-*) -> de componente (--slide-*).
+   Regla del proyecto: SOLO tema claro. Los pares de color se validan en src/slides_engine/validate.py
+   (contraste WCAG >= 4.5 y luminancia mínima de fondos); los colores semánticos deben ir en hex. */
+
+:root {
+  color-scheme: light;
+
+  /* 1. Primitivos */
+  --p-white: #FFFFFF;
+  --p-slate-50: #F3F6FA;
+  --p-slate-100: #E9EEF5;
+  --p-slate-300: #CBD5E1;
+  --p-slate-600: #475569;
+  --p-slate-900: #0F172A;
+  --p-navy-800: #1A365D;
+  --p-garnet-800: #7B1113;
+  --p-blue-700: #1D4ED8;
+
+  /* 2. Semánticos */
+  --color-canvas: var(--p-slate-100);       /* fondo de la página que rodea las diapositivas */
+  --color-bg: var(--p-white);               /* fondo de la diapositiva */
+  --color-surface: var(--p-slate-50);       /* tarjetas, bloques de código, filas alternas */
+  --color-text: var(--p-slate-900);
+  --color-text-muted: var(--p-slate-600);
+  --color-primary: var(--p-navy-800);
+  --color-on-primary: var(--p-white);
+  --color-accent: var(--p-garnet-800);
+  --color-on-accent: var(--p-white);
+  --color-border: var(--p-slate-300);
+  --color-link: var(--p-blue-700);
+
+  /* 3. Componente */
+  --slide-title-color: var(--color-primary);
+  --slide-rule-color: var(--color-accent);
+  --slide-bullet-color: var(--color-accent);
+  --slide-table-head-bg: var(--color-primary);
+  --slide-table-head-fg: var(--color-on-primary);
+  --slide-code-bg: var(--color-surface);
+  --slide-footer-fg: var(--color-text-muted);
+
+  /* Tipografía (pilas con respaldo: el PDF usa lo que Chrome encuentre instalado) */
+  --font-heading: "Times New Roman", "Liberation Serif", "Tinos", "Libertinus Serif", serif;
+  --font-body: "Inter", "Liberation Sans", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "DejaVu Sans Mono", "Liberation Mono", "Cascadia Mono", monospace;
+}
