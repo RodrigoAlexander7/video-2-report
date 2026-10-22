@@ -27,6 +27,7 @@ Los equivalentes que escriben sobre el documento completo (no sobre una celda)
 siguen en ``helpers.py``.
 """
 
+import os
 from typing import Protocol
 
 from docx.enum.table import WD_TABLE_ALIGNMENT
@@ -198,6 +199,27 @@ def add_cell_image_with_caption(cell, img_path, caption_text, cfg: CellStyleConf
     r_cap.font.size = Pt(cfg.font_size_caption_pt)
     r_cap.italic = True
     r_cap.font.color.rgb = COLOR_CAPTION
+
+
+def add_cell_code_figure(cell, snippet_id, evidence_dir, caption_text, cfg: CellStyleConfig,
+                         text_pt=9.5, max_width_in=6.0):
+    """Inserta la imagen de un fragmento de código (``main.py code-image``) por su id del manifiesto.
+
+    El ancho se calcula para que el texto del código mida ``text_pt`` en el documento sea cual sea el fragmento
+    (acotado a ``max_width_in``); así todos los fragmentos de un informe se ven con el mismo tamaño de letra.
+    """
+    from ..editor_engine.render import FONT_PX
+    from ..evidence_engine import manifest as mf
+    item = mf.load_manifest(str(evidence_dir)).get("items", {}).get(snippet_id)
+    if not item or item.get("source") != "code":
+        raise KeyError(f"'{snippet_id}' no es un fragmento de código registrado en {evidence_dir}/manifest.json "
+                       "(genera las imágenes con: python main.py code-image <caso>)")
+    path = os.path.join(str(evidence_dir), item["image"])
+    if mf.sha256_file(path) != item["image_sha256"]:
+        raise ValueError(f"la imagen de '{snippet_id}' fue modificada después de generarse: regénerala")
+    natural_in = item["width_px"] / 96                       # ancho al 100 % (texto de FONT_PX px = FONT_PX*0.75 pt)
+    width_in = min(max_width_in, natural_in * text_pt / (FONT_PX * 0.75))
+    add_cell_image_with_caption(cell, path, caption_text, cfg, width=Inches(width_in))
 
 
 # ===========================================================================

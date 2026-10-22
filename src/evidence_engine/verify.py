@@ -48,6 +48,8 @@ def verify_manifest(out_dir: str) -> List[Issue]:
                 issues.append(Issue("error", item_id, f"no existe {key}: {item[key]}"))
             elif mf.sha256_file(path) != item.get(f"{key}_sha256"):
                 issues.append(Issue("error", item_id, f"el {key} fue modificado después de capturarse ({item[key]})"))
+        if item.get("source") == "code":
+            issues.extend(_verify_code(out_dir, item_id, item))
         if item.get("source") == "annotated":
             base = item.get("base")
             if base not in items:
@@ -55,6 +57,23 @@ def verify_manifest(out_dir: str) -> List[Issue]:
         if item.get("source") == "terminal" and any(c not in (0, None) for c in item.get("returncodes", [])):
             issues.append(Issue("warning", item_id, f"algún comando terminó con código distinto de 0: {item['returncodes']}"))
     return issues
+
+
+def _verify_code(out_dir: str, item_id: str, item: Dict) -> List[Issue]:
+    """Imagen de un fragmento de código: el fuente debe seguir diciendo lo mismo que cuando se generó."""
+    if item.get("origin") == "inline":
+        return [Issue("warning", item_id, "fragmento ilustrativo (text): no se verifica contra un archivo fuente")]
+    from ..editor_engine.extract import read_source, snippet_sha256, snippet_text
+    src = os.path.normpath(os.path.join(out_dir, item.get("file", "")))
+    if not item.get("file") or not os.path.isfile(src):
+        return [Issue("error", item_id, f"no existe el archivo fuente: {item.get('file')}")]
+    lines = read_source(src)
+    ranges = [tuple(r) for r in item.get("ranges", [])]
+    if any(e > len(lines) for _, e in ranges):
+        return [Issue("error", item_id, "el archivo fuente es más corto que el rango mostrado: regenera la imagen")]
+    if snippet_sha256(snippet_text(lines, ranges)) != item.get("snippet_sha256"):
+        return [Issue("error", item_id, f"el fuente cambió después de generar la imagen ({item['file']}, líneas {ranges}): regénerala")]
+    return []
 
 
 def _transcript(out_dir: str, item: Dict) -> str:

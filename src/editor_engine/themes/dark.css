@@ -1,0 +1,8 @@
+/* Oscuro (por defecto): paleta Nord, tomada de la captura de referencia. */
+:root {
+  --bg: #2e3440; --bar: #2e3440; --border: #3b4252; --line-hi: #3b4252; --accent: #88c0d0;
+  --fg: #d8dee9; --tab-fg: #e5e9f0; --crumb: #a3acbd; --no: #7c88a2; --no-hi: #d8dee9;
+  --guide: #434c5e; --dots: #4a5468;
+  --kw: #88a9cb; --ty: #8fbcbb; --fn: #88c0d0; --st: #a3be8c; --nu: #c29cbb; --cm: #9aa6bd;
+  --at: #dc9a82; --op: #88a9cb; --bi: #88a9cb; --pp: #88a9cb;
+}

@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 from typing import Any, Dict, Optional
 
 MANIFEST_NAME = "manifest.json"
-SOURCES = ("terminal", "manual", "annotated")
+SOURCES = ("terminal", "manual", "annotated", "code")
 
 
 def sha256_file(path: str) -> str:

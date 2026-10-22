@@ -1,0 +1,27 @@
+/* Ventana de editor: tamaños exactos (lo fija render.py); sin animaciones ni scripts. */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--bg); }
+.win { position: relative; overflow: hidden; background: var(--bg); color: var(--fg);
+  font-family: "Editor Mono", monospace; font-size: 18px; line-height: 27px;
+  font-variant-ligatures: none; font-feature-settings: "liga" 0, "calt" 0;
+  box-shadow: inset 0 0 0 1px var(--border); }
+.tabs { height: 42px; display: flex; align-items: stretch; border-bottom: 1px solid var(--border); background: var(--bar); }
+.tab { display: flex; align-items: center; gap: 10px; padding: 0 22px 0 20px; color: var(--tab-fg);
+  font-family: var(--ui); font-size: 15px; box-shadow: inset 0 -2px 0 var(--accent); }
+.badge { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 4px;
+  font-family: "Editor Mono", monospace; font-size: 11px; font-weight: 700; line-height: 1; letter-spacing: -0.5px; }
+.crumbs { height: 34px; display: flex; align-items: center; gap: 8px; padding: 0 20px; color: var(--crumb);
+  font-family: var(--ui); font-size: 14px; background: var(--bg); }
+.crumbs .sep { color: var(--guide); font-size: 13px; }
+.crumbs .last { color: var(--tab-fg); display: inline-flex; align-items: center; gap: 8px; }
+.code { padding: 14px 0 16px; background: var(--bg); }
+.ln { display: flex; height: 27px; white-space: pre; }
+.ln.hi { background: var(--line-hi); box-shadow: inset 3px 0 0 var(--accent); }
+.no { flex: none; text-align: right; color: var(--no); font-variant-numeric: tabular-nums; }
+.ln.hi .no { color: var(--no-hi); }
+.tx { flex: 1; }
+.fold .tx { color: var(--cm); }
+.ig { box-shadow: inset 1px 0 0 var(--guide); color: var(--dots); }
+.kw { color: var(--kw); } .ty { color: var(--ty); } .fn { color: var(--fn); } .st { color: var(--st); }
+.nu { color: var(--nu); } .cm { color: var(--cm); font-style: italic; } .at { color: var(--at); }
+.op { color: var(--op); } .bi { color: var(--bi); } .pp { color: var(--pp); }

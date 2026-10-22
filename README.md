@@ -20,6 +20,8 @@ python main.py run inputs/NE/Lab05 --dry-run   # muestra qué usaría, sin ejecu
 | `typst-lab` | `project.toml` con `[lab]`, `content/*.typ`, specs y scripts | PDF con evidencia real | [docs/cases/typst-lab.md](docs/cases/typst-lab.md) |
 | `html-slides` | `project.toml` con `[slides]` y `content/slides.toml` | HTML + PDF de diapositivas, tema claro y sin animaciones | [docs/cases/html-slides.md](docs/cases/html-slides.md) |
 
+Función transversal `code-image`: `snippets.toml` -> imágenes de fragmentos de código con aspecto de editor (tema oscuro por defecto), registradas en el manifiesto y reutilizables en docx, Typst y diapositivas ([docs/cases/code-snippet-images.md](docs/cases/code-snippet-images.md)).
+
 `inputs/templates/user-manual.typ` y `output/autocad-addin-manual/` corresponden al generador de manuales de AutoCAD, función **deprecada**: se conserva, pero ya no recibe mantenimiento ni está registrada como pipeline.
 
 ## Estructura
@@ -31,6 +33,7 @@ src/
   core/            Registro de pipelines, detección por inputs, project.toml
   docx_engine/     Helpers python-docx (documento y celda) e inspector de .docx
   typst_engine/    Compilador Typst y plantilla informe-laboratorio
+  editor_engine/   Imágenes de fragmentos de código con aspecto de editor (Pygments + Chrome)
   slides_engine/   Diapositivas HTML: modelo, render Jinja2, reglas (tema claro, sin animaciones) y Chrome
   video_engine/    Transcripción (faster-whisper), timeline y extracción de figuras/GIFs
   evidence_engine/ Evidencia real: comandos/VDMJ -> log + figura + manifiesto verificable
@@ -68,3 +71,4 @@ python -m unittest discover -s tests -t .
 3. Nunca dibujes ni edites capturas de resultados: usa `main.py evidence`.
 4. Estilo académico y sobrio, sin colores llamativos. Reglas de redacción en `.agents/skills/lab-report-writing`.
 5. Diapositivas: siempre en tema claro y sin animaciones (`.agents/skills/academic-slides-builder`).
+6. Fragmentos de código (no el código completo) en un reporte: imagen de editor con `main.py code-image` (`.agents/skills/code-snippet-images`), nunca texto pegado ni captura editada.

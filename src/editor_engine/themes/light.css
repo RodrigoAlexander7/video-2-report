@@ -1,0 +1,8 @@
+/* Claro: Nord Snow Storm con tonos oscurecidos para contraste >= 4.5:1. Es el que usan las diapositivas. */
+:root {
+  --bg: #f4f6fa; --bar: #e9edf3; --border: #cfd6e2; --line-hi: #e1e7f0; --accent: #3b6e9c;
+  --fg: #2e3440; --tab-fg: #2e3440; --crumb: #4c566a; --no: #6b7791; --no-hi: #2e3440;
+  --guide: #cfd6e2; --dots: #c4ccda;
+  --kw: #3c6591; --ty: #2f7371; --fn: #2c6a82; --st: #3f6f2b; --nu: #8a4f84; --cm: #5f6b82;
+  --at: #a24f33; --op: #3c6591; --bi: #3c6591; --pp: #3c6591;
+}

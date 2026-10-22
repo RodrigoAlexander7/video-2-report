@@ -154,6 +154,18 @@ def run_typst_lab(args):
         cmd_run(argparse.Namespace(inputs=args.project_dir, pipeline="typst-lab", dry_run=False))
 
 
+def run_code_image(args):
+    from src.editor_engine import BrowserError, SnippetError, build_snippets
+    target = Path(args.target)
+    spec = target / "snippets.toml" if target.is_dir() else target
+    try:
+        items = build_snippets(spec, out_dir=args.out_dir)
+    except (SnippetError, BrowserError, FileNotFoundError) as exc:
+        sys.exit(f"Error en code-image:\n{exc}")
+    for item in items:
+        print(f"✓ {item['image']}  ({item['width_px']}x{item['height_px']}, texto {item['text_pt_at_6in']} pt a 6 in)")
+
+
 def run_slides(args):
     from src.reports import html_slides
     if args.action == "new":
@@ -244,6 +256,11 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("action", choices=["new", "build"])
     p.add_argument("project_dir")
     p.set_defaults(func=run_typst_lab)
+
+    p = sub.add_parser("code-image", help="Imágenes de fragmentos de código (aspecto de editor) desde snippets.toml")
+    p.add_argument("target", help="carpeta del caso (con snippets.toml) o ruta al snippets.toml")
+    p.add_argument("--out-dir", help="directorio de evidencia (por defecto output/<caso>/evidence)")
+    p.set_defaults(func=run_code_image)
 
     p = sub.add_parser("slides", help="Diapositivas HTML (tema claro, sin animaciones) + PDF")
     p.add_argument("action", choices=["new", "check", "build"],
