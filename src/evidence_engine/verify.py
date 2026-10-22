@@ -62,7 +62,7 @@ def verify_manifest(out_dir: str) -> List[Issue]:
 def _verify_code(out_dir: str, item_id: str, item: Dict) -> List[Issue]:
     """Imagen de un fragmento de código: el fuente debe seguir diciendo lo mismo que cuando se generó."""
     if item.get("origin") == "inline":
-        return [Issue("warning", item_id, "fragmento ilustrativo (text): no se verifica contra un archivo fuente")]
+        return []            # el texto es el propio contenido del reporte: no hay archivo fuente con el que compararlo
     from ..editor_engine.extract import read_source, snippet_sha256, snippet_text
     src = os.path.normpath(os.path.join(out_dir, item.get("file", "")))
     if not item.get("file") or not os.path.isfile(src):

@@ -304,12 +304,11 @@ class RealBrowserTests(unittest.TestCase):
             fh.write(b"x")
         self.assertTrue(any("modificado" in i.message for i in verify_manifest(str(self.ev)) if i.level == "error"))
 
-    def test_inline_snippet_is_marked_unverifiable(self):
+    def test_inline_snippet_is_registered_without_warnings(self):
         spec = write_case(self.dir, '[[snippet]]\nid = "i"\ntitle = "demo.py"\ntext = "x = 1\\nprint(x)"\n')
         item = build_snippets(spec, out_dir=self.ev)[0]
         self.assertEqual(item["origin"], "inline")
-        issues = verify_manifest(str(self.ev))
-        self.assertEqual([i.level for i in issues], ["warning"])
+        self.assertEqual(verify_manifest(str(self.ev)), [])      # es contenido del reporte: no hay fuente con que compararlo
 
     def test_docx_helper_sizes_text_consistently(self):
         from docx import Document
