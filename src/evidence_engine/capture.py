@@ -9,6 +9,7 @@ import os
 import re
 import shlex
 import subprocess
+from pathlib import Path
 from typing import Dict, List, Optional, Sequence
 
 from . import manifest as mf
@@ -23,6 +24,24 @@ _ANSI = re.compile(r"\x1b\[[0-9;?]*[ -/]*[@-~]")
 def strip_ansi(text: str) -> str:
     """Quita secuencias de color/estilo (p. ej. las negritas de `mvn -version`): en la figura salían como cajas."""
     return _ANSI.sub("", text)
+
+
+WINDOW_USER = os.environ.get("EVIDENCE_WINDOW_USER", "totora@rod")
+
+
+def window_title(out_dir: str, user: Optional[str] = None) -> str:
+    """Título decorativo de la ventana: ``usuario@equipo: ~/documents/<curso>/<práctica>``.
+
+    Curso y práctica salen de la ruta ``output/<curso>/<práctica>/...`` del caso (no hay ruta fija);
+    si ``out_dir`` no cuelga de ``output/`` se usa solo ``Terminal``. El título se guarda en el manifiesto
+    (``window_title``): es presentación, no un dato de la ejecución.
+    """
+    parts = Path(out_dir).resolve().parts
+    if "output" not in parts:
+        return "Terminal"
+    rest = [p for p in parts[len(parts) - parts[::-1].index("output"):] if p not in ("evidence", "figures", "build")]
+    slug = [re.sub(r"[^\w.\-]+", "-", p.lower()).strip("-") for p in rest[:2]]
+    return f"{user or WINDOW_USER}: ~/documents/" + "/".join(s for s in slug if s) if slug else "Terminal"
 
 
 def _finish(out_dir: str, name: str, transcript: str, title: str, meta: Dict, screen: Optional[str] = None,
@@ -73,8 +92,9 @@ def capture_commands(name: str, commands: Sequence[str], out_dir: str, cwd: Opti
         codes.append(code)
     transcript = strip_ansi("\n".join(lines))
     # La imagen no se rotula como "real": la procedencia (comando, fecha, hashes) vive en el manifiesto.
-    return _finish(out_dir, name, transcript, "Terminal",
-                   {"tool": "shell", "commands": list(commands), "returncodes": codes})
+    title = window_title(out_dir)
+    return _finish(out_dir, name, transcript, title,
+                   {"tool": "shell", "commands": list(commands), "returncodes": codes, "window_title": title})
 
 
 def capture_vdmj(name: str, spec_files: List[str], commands: List[str], out_dir: str,

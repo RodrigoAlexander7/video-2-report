@@ -37,6 +37,19 @@ class EvidenceTests(unittest.TestCase):
         title = render.call_args.args[1]
         self.assertNotIn("real", title.lower())   # la procedencia va en el manifiesto, no escrita en la imagen
 
+    def test_window_title_comes_from_the_case_path_not_a_fixed_one(self):
+        from src.evidence_engine.capture import window_title
+        self.assertEqual(window_title("/x/output/Calidad-Software/Actividad05/evidence", user="totora@rod"),
+                         "totora@rod: ~/documents/calidad-software/actividad05")
+        self.assertEqual(window_title("/x/output/IDSE/lab07/evidence", user="totora@rod"),
+                         "totora@rod: ~/documents/idse/lab07")
+        self.assertEqual(window_title("/x/output/solo-caso/evidence", user="u@h"), "u@h: ~/documents/solo-caso")
+        self.assertEqual(window_title(self.out), "Terminal")        # fuera de output/: no se inventa ninguna ruta
+
+    def test_window_title_is_recorded_in_the_manifest(self):
+        item = capture_commands("titulo", ["echo x"], self.out)
+        self.assertEqual(item["window_title"], "Terminal")
+
     def test_ansi_sequences_are_stripped_from_log_and_figure(self):
         item = capture_commands("ansi", ["printf '\\033[1mApache Maven\\033[m\\n'"], self.out)
         with open(os.path.join(self.out, item["log"]), encoding="utf-8") as f:
