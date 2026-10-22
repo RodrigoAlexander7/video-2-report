@@ -7,16 +7,15 @@ Todas las llamadas usan lista de argumentos (sin shell). El navegador se busca e
 from __future__ import annotations
 
 import json
-import os
 import re
-import shutil
 import subprocess
 import tempfile
 from html import unescape
 from pathlib import Path
 from typing import Any, Dict, List
 
-CANDIDATES = ("google-chrome", "google-chrome-stable", "chromium", "chromium-browser", "chrome")
+from ..core.chrome import BrowserError, find_chrome  # noqa: F401  (re-exportados)
+
 MIN_FONT_PX = 24          # tamaño mínimo de texto a 1920x1080
 TIMEOUT_S = 120
 
@@ -45,24 +44,6 @@ CHECK_SCRIPT = """
   document.body.appendChild(pre);
 })();
 """
-
-
-class BrowserError(RuntimeError):
-    """Chrome no está disponible o terminó con error."""
-
-
-def find_chrome() -> str:
-    env = os.environ.get("CHROME_BIN")
-    if env:
-        if not (Path(env).is_file() and os.access(env, os.X_OK)):
-            raise BrowserError(f"CHROME_BIN apunta a un ejecutable inexistente: {env}")
-        return env
-    for name in CANDIDATES:
-        found = shutil.which(name)
-        if found:
-            return found
-    raise BrowserError("No se encontró Chrome/Chromium (probé: " + ", ".join(CANDIDATES) + "). "
-                       "Instálalo o define CHROME_BIN=/ruta/al/ejecutable.")
 
 
 def _run(args: List[str], profile: Path) -> subprocess.CompletedProcess:
