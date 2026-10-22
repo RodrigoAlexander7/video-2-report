@@ -52,8 +52,10 @@ class DocxStyleTests(unittest.TestCase):
             Image.new("RGB", (40, 20), "white").save(img)
             _, cell = _cell()
             ch.add_cell_image_with_caption(cell, str(img), "Figura 5: Código en el editor.", self.cfg)
-        caption = [r for r in cell.paragraphs[-1].runs]
+        # imagen y pie comparten párrafo: runs = [imagen, salto de línea, etiqueta, texto]
+        caption = [r for r in cell.paragraphs[-1].runs if r.text.strip()]
         self.assertEqual([(r.text, r.bold) for r in caption], [("Figura 5:", True), (" Código en el editor.", False)])
+        self.assertEqual(len(cell.paragraphs[-1]._p.xpath(".//w:drawing")), 1)
         self.assertTrue(all(not r.italic for r in caption))
         self.assertTrue(all(r.font.color.rgb == ch.COLOR_BODY_TEXT for r in caption))
 

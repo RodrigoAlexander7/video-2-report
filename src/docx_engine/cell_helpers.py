@@ -184,16 +184,15 @@ def add_cell_code_block(cell, code_str, cfg: CellStyleConfig):
 
 
 def add_cell_image_with_caption(cell, img_path, caption_text, cfg: CellStyleConfig, width=Inches(5.4)):
-    p_img = cell.add_paragraph()
-    p_img.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p_img.paragraph_format.space_before = Pt(8)
-    p_img.paragraph_format.space_after = Pt(3)
-    p_img.add_run().add_picture(img_path, width=width)
-
+    # Imagen y pie en UN párrafo (salto de línea entre ambos): ONLYOFFICE ignora «conservar con el siguiente» dentro de
+    # celdas y dejaba el pie en la página siguiente a su imagen; un párrafo con una imagen en línea no se parte.
     p_cap = cell.add_paragraph()
     p_cap.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p_cap.paragraph_format.space_before = Pt(0)
+    p_cap.paragraph_format.space_before = Pt(8)
     p_cap.paragraph_format.space_after = Pt(10)
+    p_cap.paragraph_format.keep_together = True
+    p_cap.add_run().add_picture(img_path, width=width)
+    p_cap.add_run().add_break()
     # "Figura 5:" en negrita y el resto normal, como los pies de figura de Typst (sin cursiva ni gris)
     label, sep, rest = caption_text.partition(":")
     parts = [(label + sep, True), (rest, False)] if sep and len(label) <= 14 else [(caption_text, False)]
@@ -205,6 +204,26 @@ def add_cell_image_with_caption(cell, img_path, caption_text, cfg: CellStyleConf
         r_cap.font.size = Pt(cfg.font_size_caption_pt)
         r_cap.bold = bold
         r_cap.font.color.rgb = COLOR_BODY_TEXT
+
+
+def add_cell_runs_paragraph(cell, segments, cfg: CellStyleConfig, justify=True, space_after=None, keep_with_next=False):
+    """Párrafo con tramos ``(texto, estilo)``; estilo: ``""``, ``"bold"`` o ``"code"`` (fuente de código)."""
+    p = cell.add_paragraph()
+    p.paragraph_format.space_before = Pt(2)
+    p.paragraph_format.space_after = Pt(cfg.paragraph_space_after_pt if space_after is None else space_after)
+    p.paragraph_format.line_spacing = cfg.body_line_spacing
+    p.paragraph_format.keep_with_next = keep_with_next
+    if justify:
+        p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+    for text, style in segments:
+        run = p.add_run(text)
+        run.font.size = Pt(cfg.font_size_body_pt)
+        run.font.color.rgb = COLOR_BODY_TEXT
+        run.font.name = cfg.font_family_code if style == "code" else cfg.font_family_body
+        if style == "code":
+            run.font.size = Pt(cfg.font_size_body_pt - 1.5)
+        run.bold = style == "bold"
+    return p
 
 
 def add_cell_code_figure(cell, snippet_id, evidence_dir, caption_text, cfg: CellStyleConfig,
