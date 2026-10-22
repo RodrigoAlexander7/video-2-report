@@ -1,5 +1,12 @@
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Optional
+
+# Raíz del repositorio: las rutas por defecto se derivan de aquí, no del home del usuario.
+REPO_ROOT = Path(__file__).resolve().parent
+
+def _repo_path(*parts: str) -> str:
+    return str(REPO_ROOT.joinpath(*parts))
 
 @dataclass
 class ReportConfig:
@@ -41,10 +48,10 @@ class ReportConfig:
     bullet_sub_indent_inches: float = 0.50
 
     # Rutas por defecto
-    video_path: str = "/home/totora/Documents/PROFESIONAL/video-report/inputs/video/2026-10-04 13-52-34.mp4"
-    template_path: str = "/home/totora/Documents/PROFESIONAL/video-report/inputs/input-template.docx"
-    output_path: str = "/home/totora/Documents/PROFESIONAL/video-report/output/unity-practice-02/Reporte_Practica_02_Unity.docx"
-    media_dir: str = "/home/totora/Documents/PROFESIONAL/video-report/media"
+    video_path: str = _repo_path("inputs", "video", "2026-10-04 13-52-34.mp4")
+    template_path: str = _repo_path("inputs", "input-template.docx")
+    output_path: str = _repo_path("output", "unity-practice-02", "Reporte_Practica_02_Unity.docx")
+    media_dir: str = _repo_path("media")
 
 # Instancia global por defecto
 DEFAULT_CONFIG = ReportConfig(high_quality_gifs=True)

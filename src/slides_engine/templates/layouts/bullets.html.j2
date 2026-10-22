@@ -1,0 +1,7 @@
+{% from "_macros.html.j2" import head, foot %}
+{{ head(s) }}
+<div class="slide-body">
+  {% if s.lead %}<p class="lead">{{ s.lead|inline }}</p>{% endif %}
+  <ul class="bullet-list">{% for it in s.entries %}<li>{{ it|inline }}</li>{% endfor %}</ul>
+</div>
+{{ foot(meta, logos, n, total) }}

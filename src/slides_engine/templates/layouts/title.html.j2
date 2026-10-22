@@ -1,0 +1,13 @@
+{% from "_macros.html.j2" import logos_row %}
+<div class="cover">
+  <div class="cover-top">{{ logos_row(logos) }}</div>
+  <div class="cover-main">
+    {% if meta.course %}<p class="cover-kicker">{{ meta.course }}</p>{% endif %}
+    <h1 class="cover-title">{{ s.title|inline }}</h1>
+    {% if s.subtitle %}<p class="cover-subtitle">{{ s.subtitle|inline }}</p>{% endif %}
+  </div>
+  <div class="cover-meta">
+    <div class="meta-authors">{% if meta.authors %}<strong>{{ labels.authors }}</strong>{% for a in meta.authors %}{{ a }}{% if not loop.last %}<br>{% endif %}{% endfor %}{% endif %}</div>
+    <div class="meta-info">{% if meta.instructor %}<strong>{{ labels.instructor }}</strong>{{ meta.instructor }}<br>{% endif %}{{ [meta.semester, meta.date]|select|join(" · ") }}</div>
+  </div>
+</div>

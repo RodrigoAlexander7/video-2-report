@@ -1,0 +1,8 @@
+{% from "_macros.html.j2" import foot %}
+<div class="quote-wrap">
+  <blockquote class="quote-block">
+    <p class="quote-text">{{ s.text|inline }}</p>
+    {% if s.author %}<p class="quote-author">{{ s.author|inline }}</p>{% endif %}
+  </blockquote>
+</div>
+{{ foot(meta, logos, n, total) }}

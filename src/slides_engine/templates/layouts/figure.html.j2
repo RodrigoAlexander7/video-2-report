@@ -1,0 +1,12 @@
+{% from "_macros.html.j2" import head, foot %}
+{{ head(s) }}
+<div class="slide-body">
+  <div class="fig-layout{% if s.points %} with-points{% endif %}">
+    <figure class="fig-main">
+      <div class="fig-frame"><img src="{{ s.image_uri }}" alt="{{ s.caption }}"></div>
+      <figcaption class="caption"><b>{{ labels.figure }} {{ s.fig_no }}.</b> {{ s.caption|inline }}</figcaption>
+    </figure>
+    {% if s.points %}<div class="fig-points"><ul class="bullet-list">{% for it in s.points %}<li>{{ it|inline }}</li>{% endfor %}</ul></div>{% endif %}
+  </div>
+</div>
+{{ foot(meta, logos, n, total) }}

@@ -50,3 +50,4 @@ inputs/video/*.mp4
 inputs/video/*.mkv
 
 inputs/
+temp/

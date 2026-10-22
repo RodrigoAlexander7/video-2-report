@@ -11,6 +11,20 @@ from .helpers import (
     add_screenshot_placeholder,
     add_table_custom
 )
+from .cell_helpers import (
+    apply_cell_margins,
+    add_cell_heading_1,
+    add_cell_heading_2,
+    add_cell_body_paragraph,
+    add_cell_bullet_point,
+    add_cell_code_block,
+    add_cell_image_with_caption,
+    add_cell_heading,
+    add_cell_p,
+    add_cell_bullet,
+    add_cell_table,
+    add_cell_placeholder
+)
 
 __all__ = [
     "set_cell_border",
@@ -23,5 +37,17 @@ __all__ = [
     "add_bullet",
     "add_callout",
     "add_screenshot_placeholder",
-    "add_table_custom"
+    "add_table_custom",
+    "apply_cell_margins",
+    "add_cell_heading_1",
+    "add_cell_heading_2",
+    "add_cell_body_paragraph",
+    "add_cell_bullet_point",
+    "add_cell_code_block",
+    "add_cell_image_with_caption",
+    "add_cell_heading",
+    "add_cell_p",
+    "add_cell_bullet",
+    "add_cell_table",
+    "add_cell_placeholder"
 ]

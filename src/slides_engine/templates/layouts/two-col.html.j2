@@ -1,0 +1,13 @@
+{% from "_macros.html.j2" import head, foot %}
+{{ head(s) }}
+<div class="slide-body">
+  <div class="cols">
+    {% for side in (s.left, s.right) %}
+    <section class="col-card">
+      <h3 class="col-heading">{{ side.heading|inline }}</h3>
+      <ul class="bullet-list">{% for it in side.entries %}<li>{{ it|inline }}</li>{% endfor %}</ul>
+    </section>
+    {% endfor %}
+  </div>
+</div>
+{{ foot(meta, logos, n, total) }}
