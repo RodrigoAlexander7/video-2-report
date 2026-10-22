@@ -39,14 +39,14 @@ from docx.shared import Inches, Pt, RGBColor
 from .helpers import set_cell_border, set_cell_margins, set_cell_shading
 
 # ---------------------------------------------------------------------------
-# Paleta corporativa sobria (EPIS / UNSA) de la familia configurable
+# Estilo sobrio de la familia configurable, igual que los informes Typst: encabezados y viñetas en el
+# color del texto (sin azules ni acentos), bloques de código en gris claro con borde fino y pies de figura
+# con la etiqueta en negrita. Nada de recuadros de color: ni rojo para advertencias ni pastel para notas.
 # ---------------------------------------------------------------------------
-COLOR_PRIMARY_NAVY = RGBColor(0x1B, 0x36, 0x5D)    # Azul institucional #1B365D
-COLOR_SECONDARY_DARK = RGBColor(0x2B, 0x4C, 0x7E)  # Azul medio #2B4C7E
-COLOR_BODY_TEXT = RGBColor(0x1F, 0x24, 0x21)       # Grafito suave para lectura
-COLOR_CAPTION = RGBColor(0x55, 0x5B, 0x6E)         # Gris tenue
-COLOR_BORDER = "CBD5E1"                            # Borde tenue para bloques de código
-COLOR_CODE_BG = "F8FAFC"                           # Fondo bloque código #F8FAFC
+COLOR_BODY_TEXT = RGBColor(0x1F, 0x24, 0x21)       # Grafito suave para lectura (también encabezados y viñetas)
+COLOR_CODE_TEXT = RGBColor(0x24, 0x29, 0x2E)
+COLOR_BORDER = "D6D6D6"                            # Borde fino de los bloques de código (luma 214)
+COLOR_CODE_BG = "F7F7F7"                           # Fondo del bloque de código (luma 247)
 
 
 class CellStyleConfig(Protocol):
@@ -87,7 +87,7 @@ def add_cell_heading_1(cell, text, cfg: CellStyleConfig):
     run.bold = True
     run.font.name = cfg.font_family_body
     run.font.size = Pt(cfg.font_size_heading1_pt)
-    run.font.color.rgb = COLOR_PRIMARY_NAVY
+    run.font.color.rgb = COLOR_BODY_TEXT
     return p
 
 
@@ -100,7 +100,7 @@ def add_cell_heading_2(cell, text, cfg: CellStyleConfig):
     run.bold = True
     run.font.name = cfg.font_family_body
     run.font.size = Pt(cfg.font_size_heading2_pt)
-    run.font.color.rgb = COLOR_SECONDARY_DARK
+    run.font.color.rgb = COLOR_BODY_TEXT
     return p
 
 
@@ -135,11 +135,11 @@ def add_cell_bullet_point(cell, bold_text, desc_text, cfg: CellStyleConfig, leve
     p.paragraph_format.line_spacing = cfg.body_line_spacing
     p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
 
-    bullet_symbol = "■  " if level == 1 else "○  "
+    bullet_symbol = "•  " if level == 1 else "–  "
     r_sym = p.add_run(bullet_symbol)
     r_sym.font.name = cfg.font_family_body
-    r_sym.font.size = Pt(cfg.font_size_body_pt - 1)
-    r_sym.font.color.rgb = COLOR_PRIMARY_NAVY if level == 1 else COLOR_SECONDARY_DARK
+    r_sym.font.size = Pt(cfg.font_size_body_pt)
+    r_sym.font.color.rgb = COLOR_BODY_TEXT
 
     if bold_text:
         r_b = p.add_run(bold_text)
@@ -168,7 +168,7 @@ def add_cell_code_block(cell, code_str, cfg: CellStyleConfig):
 
     pBdr = parse_xml(
         f'<w:pBdr {nsdecls("w")}>'
-        f'  <w:left w:val="single" w:sz="18" w:space="8" w:color="1B365D"/>'
+        f'  <w:left w:val="single" w:sz="4" w:space="8" w:color="{COLOR_BORDER}"/>'
         f'  <w:top w:val="single" w:sz="4" w:space="4" w:color="{COLOR_BORDER}"/>'
         f'  <w:right w:val="single" w:sz="4" w:space="4" w:color="{COLOR_BORDER}"/>'
         f'  <w:bottom w:val="single" w:sz="4" w:space="4" w:color="{COLOR_BORDER}"/>'
@@ -179,7 +179,7 @@ def add_cell_code_block(cell, code_str, cfg: CellStyleConfig):
     run = p.add_run(code_str)
     run.font.name = cfg.font_family_code
     run.font.size = Pt(cfg.font_size_code_pt)
-    run.font.color.rgb = RGBColor(0x24, 0x29, 0x2E)
+    run.font.color.rgb = COLOR_CODE_TEXT
     return p
 
 
@@ -194,11 +194,17 @@ def add_cell_image_with_caption(cell, img_path, caption_text, cfg: CellStyleConf
     p_cap.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_cap.paragraph_format.space_before = Pt(0)
     p_cap.paragraph_format.space_after = Pt(10)
-    r_cap = p_cap.add_run(caption_text)
-    r_cap.font.name = cfg.font_family_body
-    r_cap.font.size = Pt(cfg.font_size_caption_pt)
-    r_cap.italic = True
-    r_cap.font.color.rgb = COLOR_CAPTION
+    # "Figura 5:" en negrita y el resto normal, como los pies de figura de Typst (sin cursiva ni gris)
+    label, sep, rest = caption_text.partition(":")
+    parts = [(label + sep, True), (rest, False)] if sep and len(label) <= 14 else [(caption_text, False)]
+    for text, bold in parts:
+        if not text:
+            continue
+        r_cap = p_cap.add_run(text)
+        r_cap.font.name = cfg.font_family_body
+        r_cap.font.size = Pt(cfg.font_size_caption_pt)
+        r_cap.bold = bold
+        r_cap.font.color.rgb = COLOR_BODY_TEXT
 
 
 def add_cell_code_figure(cell, snippet_id, evidence_dir, caption_text, cfg: CellStyleConfig,
