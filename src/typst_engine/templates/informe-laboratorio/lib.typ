@@ -16,7 +16,7 @@
 //    (--root), con o sin "/" inicial.
 //  * Fecha y hora son opcionales: `--input fecha=AAAA-MM-DD` y
 //    `--input hora=HH:MM` tienen prioridad sobre `config.date` / `config.time`;
-//    sin ninguna de las dos, la fecha es la de hoy (y la hora se muestra "-").
+//    sin ninguna de las dos, la fecha es la de hoy (y la hora es "12:00:00").
 // =============================================================================
 
 // ---- Configuracion por defecto ----------------------------------------------
@@ -415,7 +415,7 @@
   let fecha = sys.inputs.at("fecha", default: cfg.date)
   let fecha = if fecha == none { today.display("[year]-[month]-[day]") } else { str(fecha) }
   let hora = sys.inputs.at("hora", default: cfg.time)
-  let hora = if hora == none or str(hora) == "" { "—" } else { str(hora) }
+  let hora = if hora == none or str(hora) == "" { "12:00:00" } else { str(hora) }
   let ymd = fecha.match(regex("^(\d{4})-(\d{2})-(\d{2})$"))
   let year = if cfg.year != none { str(cfg.year) } else if ymd != none { ymd.captures.at(0) } else { str(today.year()) }
   let doc-date = if ymd != none {

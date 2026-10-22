@@ -21,7 +21,7 @@ members = [
 # level = "Octavo VIII"        # "Nro. semestre" (por defecto "—"); semester = "B" se muestra como "2026 - B"
 # year = 2026                  # por defecto, el año de la fecha de presentación
 # date = "2026-01-31"          # por defecto, la fecha de hoy (o --input fecha=AAAA-MM-DD)
-# time = "20:00"               # por defecto "—" (o --input hora=HH:MM)
+# time = "20:00"               # por defecto "12:00:00" (o --input hora=HH:MM)
 # institution = ["UNIVERSIDAD ...", "FACULTAD ...", "ESCUELA PROFESIONAL ..."]
 
 [build]

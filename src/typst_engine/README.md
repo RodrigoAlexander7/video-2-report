@@ -31,7 +31,7 @@ compile_typst("main.typ", "out/informe.pdf", root=".", inputs={"fecha": "2026-01
 
 Rutas de los helpers: relativas a la raíz del proyecto (con o sin `/` inicial). Los logos se
 resuelven relativos a `lib.typ`. Fecha/hora: `--input fecha=AAAA-MM-DD`, `--input hora=HH:MM`
-> `config.date`/`config.time` > hoy (hora: "—"). Si no se pasa `config`, se lee `--input config=<json>`.
+> `config.date`/`config.time` > hoy (hora: "12:00:00"). Si no se pasa `config`, se lee `--input config=<json>`.
 
 Claves de config (ver `default-config` en `lib.typ`): `course title number instructor semester level year
 members date time institution doc-title doc-format doc-approval doc-code logo-left logo-right

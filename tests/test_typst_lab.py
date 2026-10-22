@@ -25,7 +25,7 @@ class TypstLabTests(unittest.TestCase):
             scaffold(str(project))
             toml = project / "project.toml"
             toml.write_text(toml.read_text(encoding="utf-8").replace('semester = "A"', 'semester = "A"\nlevel = "Octavo VIII"'), encoding="utf-8")
-            pdf = build(str(project), out_dir=str(Path(d) / "out"), inputs={"fecha": "2026-09-30", "hora": "12:00:00"})
+            pdf = build(str(project), out_dir=str(Path(d) / "out"), inputs={"fecha": "2026-09-30"})   # sin hora: por defecto 12:00:00
             text = subprocess.run(["pdftotext", "-f", "1", "-l", "1", str(pdf), "-"], capture_output=True, text=True).stdout
             text = " ".join(text.split())      # las etiquetas largas se parten en dos líneas dentro de su celda
         for expected in ("INFORMACIÓN BÁSICA", "ASIGNATURA:", "TÍTULO DE LA PRÁCTICA:", "NÚMERO DE PRÁCTICA:", "AÑO LECTIVO:",
