@@ -166,6 +166,57 @@ def run_code_image(args):
         print(f"✓ {item['image']}  ({item['width_px']}x{item['height_px']}, texto {item['text_pt_at_6in']} pt a 6 in)")
 
 
+def run_unity_lab(args):
+    from src import unity_lab as ul
+    from src.core.docx_render import RenderError, review_docx
+    from src.editor_engine import BrowserError
+    from src.video_engine.frames import VideoError
+    from src.video_engine.ocr import OcrError
+    project = Path(args.project_dir)
+    problems = (ul.ReportError, ul.FigureError, FileNotFoundError, FileExistsError, BrowserError, VideoError, OcrError, RenderError)
+    try:
+        if args.action == "new":
+            print(f"✓ Esqueleto creado en {ul.scaffold(project)}")
+        elif args.action == "plan":
+            groups = ul.outline(project)
+            for g in groups:
+                print(f"{g['when']:>8}  {g['text'][:170]}")
+            print(f"\n{len(groups)} pasos candidatos. Usa estos tiempos en `t` de cada figura de content/report.toml.")
+        elif args.action == "check":
+            lab = ul.load_lab(project)
+            out, figures, _ = ul.default_dirs(project.resolve())
+            from src.unity_lab.figures import load_results
+            rep = ul.check_lab(lab, load_results(figures) or None)
+            for issue in rep.issues:
+                print(issue)
+            print(ul.format_scorecard(rep))
+            if rep.errors or (args.strict and rep.warnings):
+                sys.exit(1)
+        elif args.action == "capture":
+            lab = ul.load_lab(project)
+            out, figures, evidence = ul.default_dirs(project.resolve())
+            video = project.resolve() / lab.meta["video"] if lab.meta.get("video") else None
+            ul.capture_figures(lab, video, figures, evidence, force=args.force, only=args.only,
+                               langs=lab.meta.get("ocr_langs", "eng"))
+            print(f"Hojas de revisión (candidatos y recorte final): {figures / '_review'}")
+        elif args.action in ("build", "review"):
+            if args.action == "build":
+                docx_path = ul.build(project, args.out_dir, force=args.force, strict=args.strict, only=args.only)
+            else:
+                lab = ul.load_lab(project)
+                out, _, _ = ul.default_dirs(project.resolve())
+                docx_path = Path(args.docx) if args.docx else out / f"Reporte_Practica_{lab.meta['number']}_Unity.docx"
+            if args.action == "review" or args.review:
+                rev = review_docx(docx_path, docx_path.parent / "review")
+                print(f"✓ {len(rev.pages)} páginas -> {rev.pdf}")
+                for sheet in rev.sheets:
+                    print(f"  hoja: {sheet}")
+                if rev.sparse:
+                    print(f"  ATENCIÓN: páginas casi vacías: {rev.sparse} (una figura alta o un salto de página las deja con espacio en blanco)")
+    except problems as exc:
+        sys.exit(f"Error en unity-lab:\n{exc}")
+
+
 def run_slides(args):
     from src.reports import html_slides
     if args.action == "new":
@@ -261,6 +312,19 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("target", help="carpeta del caso (con snippets.toml) o ruta al snippets.toml")
     p.add_argument("--out-dir", help="directorio de evidencia (por defecto output/<caso>/evidence)")
     p.set_defaults(func=run_code_image)
+
+    p = sub.add_parser("unity-lab", help="Reporte de laboratorio de Unity (docx): figuras del video, código como imagen, revisión")
+    p.add_argument("action", choices=["new", "plan", "check", "capture", "build", "review"],
+                   help="new: esqueleto; plan: pasos candidatos desde la transcripción; check: revisa texto/código/citas; "
+                        "capture: figuras del video; build: .docx completo; review: renderiza el .docx a imágenes")
+    p.add_argument("project_dir")
+    p.add_argument("--force", action="store_true", help="recaptura las figuras aunque estén en caché")
+    p.add_argument("--only", nargs="*", help="ids de figuras a capturar")
+    p.add_argument("--strict", action="store_true", help="los avisos también detienen el build")
+    p.add_argument("--review", action="store_true", help="tras el build, renderiza el .docx (PDF + hojas de páginas)")
+    p.add_argument("--out-dir", help="carpeta de salida (por defecto output/<caso>)")
+    p.add_argument("--docx", help="(review) .docx a renderizar")
+    p.set_defaults(func=run_unity_lab)
 
     p = sub.add_parser("slides", help="Diapositivas HTML (tema claro, sin animaciones) + PDF")
     p.add_argument("action", choices=["new", "check", "build"],

@@ -205,6 +205,20 @@ def _has_slides_table(d: Path) -> bool:
     return "slides" in proj or proj.get("pipeline") == "html-slides"
 
 
+def _plan_unity_lab(d: Path, o: Dict[str, Any], slug: str) -> Plan:
+    return {"project_dir": str(d), "out_dir": _path(d, o["out_dir"]) if "out_dir" in o else str(_out_dir(slug))}
+
+
+def _run_unity_lab(p: Plan) -> List[str]:
+    from src.unity_lab import build
+    return [str(build(p["project_dir"], p["out_dir"]))]
+
+
+def _has_unity_table(d: Path) -> bool:
+    proj = load_project(d)
+    return "unity" in proj or proj.get("pipeline") == "unity-lab"
+
+
 PIPELINES: Dict[str, Pipeline] = {pl.name: pl for pl in [
     Pipeline("video-report", "Reporte Word por etapas a partir de un video (figuras anotadas y GIFs).",
              requires=("*.mp4",), accepts=("*.docx", "project.toml"), produces="<output>/<slug>/Reporte_<caso>.docx + figures/",
@@ -245,6 +259,12 @@ PIPELINES: Dict[str, Pipeline] = {pl.name: pl for pl in [
              template="tema academic-light (src/slides_engine/assets/themes)",
              example="main.py slides new inputs/mi-deck && main.py run inputs/mi-deck",
              plan=_plan_html_slides, run=_run_html_slides, predicate=_has_slides_table),
+    Pipeline("unity-lab", "Reporte de laboratorio de Unity (docx EPIS): figuras del video, código como imagen y revisión de estilo.",
+             requires=("project.toml",), accepts=("content/report.toml", "code/", "*.mp4", "*.docx"),
+             produces="output/<slug>/Reporte_Practica_<NN>_Unity.docx + figures/ + evidence/",
+             template="plantilla EPIS .docx indicada en [unity] template",
+             example="main.py unity-lab new inputs/IDSE/lab08 && main.py unity-lab build inputs/IDSE/lab08",
+             plan=_plan_unity_lab, run=_run_unity_lab, predicate=_has_unity_table),
 ]}
 
 
