@@ -1,55 +1,35 @@
 ---
 name: progressive-tutorial-builder
-description: Transforma transcripciones de video técnico y código fuente en tutoriales escritos estructurados en etapas progresivas, con código incremental, evidencias causa-efecto y tono procedimental.
+description: Redacta el desarrollo de un laboratorio como pasos cortos en orden cronológico, cada uno con su imagen o su código, a partir de la transcripción del video y del código fuente. Úsala antes de escribir el report.toml de un laboratorio de Unity (ver unity-lab-report).
 ---
 
-# Progressive Tutorial Builder Skill
+# Pasos de un laboratorio, directos y visuales
 
-Esta skill define el contrato pedagógico y metodológico para transformar videos de programación, ingeniería o talleres técnicos en **tutoriales escritos paso a paso**, listos para incrustarse en reportes de laboratorio (`.docx` para OnlyOffice o `.typ` para PDF).
+El desarrollo del reporte es una secuencia de pasos, no un tutorial con secciones fijas. El reporte de nota 18 se leía así: una acción, su captura, la siguiente acción. Los reportes anteriores generados por agente bajaron a 14 por lo contrario: párrafos largos, pocas imágenes, el mismo contenido repetido en etapas, cuestionario y conclusiones, y un tono genérico.
 
----
+## Principios
 
-## 🎯 Principios Fundamentales
+1. **Un paso, una acción, una imagen.** 1-2 frases (≤ 45 palabras) y su captura o su fragmento de código inmediatamente después. Si un paso necesita más texto, son dos pasos.
+2. **Orden del video.** Los tiempos salen de la transcripción (`python main.py unity-lab plan`), no de memoria.
+3. **Solo lo que se hizo.** Sin «Objetivo de la etapa», sin introducciones («En esta etapa se…»), sin resumen al cierre de cada etapa. El encabezado ya dice de qué trata.
+4. **Voz del reporte de 18**: primera persona del plural y verbos de acción: «Creamos el script», «Marcamos Freeze Rotation». Sin voseo.
+5. **Sin adjetivos de valor** (clave, crítico, fundamental, robusto, riguroso, óptimo…) ni apreciaciones personales. Se describe lo que ocurrió y lo que se observó.
+6. **Errores y correcciones**: si el video muestra un fallo, un paso para el fallo (con su captura) y otro para la corrección. La causa va en una frase.
+7. **Código**: nunca se transcribe. Se referencia `file` + `lines` del código real; el motor lo dibuja como imagen de editor y lo divide si es largo.
+8. **Cuestionario y conclusiones**: responden lo que pide la guía en 2-3 frases; las conclusiones salen de lo observado (valores, resultados, el fallo y su arreglo), no de lecciones generales.
 
-1. **Estructura Didáctica por Etapas Cronológicas:**
-   - La sección de desarrollo nunca debe redactarse como un resumen ejecutivo pasivo (*"Se realizó..."*), sino como una **guía procedimental orientada a la acción** (*"Paso 1: Configurar...", "Paso 2: Implementar..."*).
-   - Cada etapa representa un hito funcional del video.
+## Ejemplo
 
-2. **Código Progresivo e Incremental:**
-   - **Prohibido volcar el script completo al inicio.**
-   - Cada etapa solo muestra el fragmento de código que se introduce en ese momento.
-   - El código completo y consolidado se ubica exclusivamente al final de la última etapa de implementación como bloque de referencia.
+Malo (genérico y largo):
 
-3. **Colocación de Evidencias Causa $\rightarrow$ Efecto:**
-   - Las figuras y GIFs deben insertarse **inmediatamente después** de la instrucción que los genera.
-   - Si una etapa introduce una prueba intermedia con error (ej. torque indeseado), se inserta la evidencia del fallo, seguida de la explicación de la causa raíz, la instrucción correctiva y la evidencia del comportamiento corregido.
+> **Advertencia Técnica Clave (Ámbito de Clases):** Durante la sesión se cometió el error inicial de anidar `OnCollisionStay` dentro del método `ProcessInput()`. Debido a que Unity invoca estos eventos mágicos por reflexión…
 
-4. **Tono Instructivo e Imperativo:**
-   - Uso de verbos de acción en modo imperativo o infinitivo profesional (*"Abra el Inspector...", "Declare las variables públicas...", "Verifique el comportamiento en modo Play"*).
+Bueno:
 
----
+> Habíamos escrito `OnCollisionStay` dentro de `ProcessInput()` y el salto no funcionaba. Lo movimos al nivel de la clase, junto a `Update()`.
 
-## 📋 Estructura Estándar de una Etapa de Tutorial
+## Integración
 
-Cada etapa del desarrollo debe seguir este patrón:
-
-```markdown
-### Etapa N: [Nombre del Hito Funcional]
-1. **Objetivo de la etapa:** Breve descripción de lo que se logrará.
-2. **Instrucciones paso a paso:** Acciones en el software o IDE.
-3. **Fragmento de código incremental:** Solo las líneas añadidas o modificadas.
-4. **Prueba y Verificación (Evidencia Visual):**
-   - Captura anotada (con figure-enhancer) o GIF animado.
-   - Descripción del resultado observado.
-5. **Incidencias y Consideraciones Técnicas (si aplica):**
-   - Problema encontrado $\rightarrow$ Causa física/lógica $\rightarrow$ Solución aplicada.
-```
-
----
-
-## 🧩 Integración con Otras Skills
-
-- **`faster-whisper`:** Provee `transcription.txt` y `transcription_segments.json` con timestamps.
-- **`progressive-tutorial-builder` (Esta skill):** Divide los timestamps en etapas didácticas y redacta el tutorial incremental.
-- **`figure-enhancer`:** Genera los recortes de paneles, flechas y animaciones GIF para cada una de las etapas.
-- **Generador de Reporte (`generate_report.py` / `typst`):** Compila el documento final.
+- `faster-whisper` (`main.py transcribe`): transcripción con tiempos.
+- `unity-lab-report`: formato de `report.toml`, figuras por OCR, código como imagen, `check`/`build`/`review`.
+- `code-snippet-images`: el motor de imágenes de código.

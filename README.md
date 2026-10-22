@@ -19,6 +19,7 @@ python main.py run inputs/NE/Lab05 --dry-run   # muestra qué usaría, sin ejecu
 | `epis-ne-short` | `input-template.docx` (explícito) | informe corto de la guía | [docs/cases/epis-ne.md](docs/cases/epis-ne.md) |
 | `typst-lab` | `project.toml` con `[lab]`, `content/*.typ`, specs y scripts | PDF con evidencia real | [docs/cases/typst-lab.md](docs/cases/typst-lab.md) |
 | `html-slides` | `project.toml` con `[slides]` y `content/slides.toml` | HTML + PDF de diapositivas, tema claro y sin animaciones | [docs/cases/html-slides.md](docs/cases/html-slides.md) |
+| `unity-lab` | `project.toml` con `[unity]`, `content/report.toml`, `code/` y el video | `.docx` EPIS de laboratorio de Unity: figuras verificadas por OCR, código como imagen, revisión de estilo y vista previa | [docs/cases/unity-lab.md](docs/cases/unity-lab.md) |
 
 Función transversal `code-image`: `snippets.toml` -> imágenes de fragmentos de código con aspecto de editor (tema oscuro por defecto), registradas en el manifiesto y reutilizables en docx, Typst y diapositivas ([docs/cases/code-snippet-images.md](docs/cases/code-snippet-images.md)).
 
@@ -35,7 +36,8 @@ src/
   typst_engine/    Compilador Typst y plantilla informe-laboratorio
   editor_engine/   Imágenes de fragmentos de código con aspecto de editor (Pygments + Chrome)
   slides_engine/   Diapositivas HTML: modelo, render Jinja2, reglas (tema claro, sin animaciones) y Chrome
-  video_engine/    Transcripción (faster-whisper), timeline y extracción de figuras/GIFs
+  video_engine/    Transcripción (faster-whisper), fotogramas por calidad, OCR, recortes por panel y anotaciones ancladas
+  unity_lab/       Reporte de laboratorio de Unity (docx): modelo, revisión de estilo, figuras, código, build
   evidence_engine/ Evidencia real: comandos/VDMJ -> log + figura + manifiesto verificable
   reports/         Un paquete por caso (epis_ne, unity_practice, typst_lab, html_slides)
 tests/             Pruebas automáticas (unittest)
@@ -52,7 +54,7 @@ Las figuras de resultados salen de ejecuciones reales y quedan registradas en `o
 ## Instalación
 
 ```bash
-sudo apt install -y ffmpeg gifsicle poppler-utils   # y Typst (https://typst.app) para typst-lab; Chrome/Chromium para html-slides
+sudo apt install -y ffmpeg gifsicle poppler-utils tesseract-ocr tesseract-ocr-spa hunspell-es   # y Typst (https://typst.app) para typst-lab; Chrome/Chromium para html-slides y code-image; LibreOffice u ONLYOFFICE para la vista previa de unity-lab
 uv sync
 ```
 
@@ -72,3 +74,5 @@ python -m unittest discover -s tests -t .
 4. Estilo académico y sobrio, sin colores llamativos. Reglas de redacción en `.agents/skills/lab-report-writing`.
 5. Diapositivas: siempre en tema claro y sin animaciones (`.agents/skills/academic-slides-builder`).
 6. Fragmentos de código (no el código completo) en un reporte: imagen de editor con `main.py code-image` (`.agents/skills/code-snippet-images`), nunca texto pegado ni captura editada.
+7. Reportes de laboratorio de Unity: `main.py unity-lab` (`.agents/skills/unity-lab-report`). Un paso, una imagen; texto directo, sin superlativos ni juicios; `check` sin errores ni avisos y revisar `figures/_review` y `review/` antes de entregar.
+8. Los paquetes de Python se instalan en el entorno del proyecto (`uv add`), nunca en el sistema.

@@ -5,6 +5,8 @@ description: Optimiza, recorta de forma inteligente y anota figuras técnicas (f
 
 # Figure Enhancer Skill
 
+> **Para reportes de laboratorio de Unity usa `unity-lab-report`.** Sus figuras se recortan por panel y se anotan con `src/video_engine/annotate.py`, que ancla cada anotación a un texto de la interfaz hallado por OCR. Este módulo coloca recuadros y flechas en coordenadas escritas a mano: eso produjo flechas que no señalaban nada, recuadros con relleno que tapaban el texto y recortes que cortaban líneas. Queda para casos heredados; si lo usas, sin relleno, sin etiquetas dentro de la imagen y una anotación por figura como máximo.
+
 Esta skill proporciona herramientas y convenciones deterministas para mejorar capturas de pantalla de software, simuladores o IDEs antes de insertarlas en reportes técnicos y académicos.
 
 ## ¿Por qué usarla?
