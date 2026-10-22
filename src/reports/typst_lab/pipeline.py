@@ -49,7 +49,7 @@ MONO_FALLBACKS = ["DejaVu Sans Mono", "Liberation Mono", "Cascadia Mono"]
 
 # Claves de [lab] y [build] que pasan tal cual a config.json (la plantilla define los defaults).
 LAB_KEYS = (
-    "course", "title", "number", "instructor", "semester", "year", "members", "date", "time",
+    "course", "title", "number", "instructor", "semester", "level", "year", "members", "date", "time",
     "institution", "doc-title", "doc-format", "doc-approval", "doc-code", "logo-left",
     "logo-right", "note-placeholder",
 )

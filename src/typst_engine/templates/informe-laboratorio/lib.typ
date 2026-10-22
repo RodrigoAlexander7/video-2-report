@@ -27,7 +27,8 @@
   title: "",
   number: "",
   instructor: "",
-  semester: "",
+  semester: "",   // letra/periodo del año lectivo ("B" o "2026-B"); se muestra como "2026 - B"
+  level: none,    // "Nro. semestre" que se muestra tal cual, p. ej. "Octavo VIII"
   year: none,
   members: (),
   date: none,
@@ -247,22 +248,18 @@
 )
 
 /// Nota destacada (kind: "info" | "tip" | "warning" | "danger").
-#let callout(body, title: none, kind: "info") = {
-  let (color, tint) = (
-    info: (rgb("#2B6CB0"), rgb("#F0F9FF")),
-    tip: (rgb("#16A34A"), rgb("#F0FDF4")),
-    warning: (rgb("#D97706"), rgb("#FFFBEB")),
-    danger: (rgb("#DC2626"), rgb("#FEF2F2")),
-  ).at(kind)
+/// Nota o dictamen sobrio: filete vertical gris y texto oscuro, sin fondos ni colores (ni rojo para advertencias).
+/// `kind` se acepta por compatibilidad ("info", "tip", "warning", "danger", ...) y NO cambia el aspecto.
+#let callout(body, title: none, kind: none) = {
   block(
     width: 100%,
-    fill: tint,
-    stroke: (left: 3pt + color, rest: 0.4pt + luma(215)),
-    inset: (x: 0.9em, y: 0.7em),
-    radius: (right: 3pt),
+    stroke: (left: 2.2pt + luma(100)),
+    inset: (left: 1em, y: 0.45em),
+    above: 0.8em,
+    below: 0.8em,
     breakable: false,
     {
-      if title != none { text(fill: color, weight: "bold", size: 0.95em, title); linebreak() }
+      if title != none { text(weight: "bold", title); linebreak() }
       body
     },
   )
@@ -352,36 +349,53 @@
   )
 }
 
+// "2026" + "B" -> "2026 - B"; si `semester` ya trae el año ("2026B", "2026-B") se normaliza igual.
+#let _academic-term(year, semester) = {
+  let s = if semester == none { "" } else { str(semester).trim() }
+  if s == "" { return str(year) }
+  let m = s.match(regex("^(\d{4})\s*-?\s*(\S+)$"))
+  if m != none { m.captures.at(0) + " - " + m.captures.at(1) } else { str(year) + " - " + s }
+}
+
+// "2026-01-31" -> "31/01/2026" (otro formato se deja tal cual)
+#let _display-date(fecha) = {
+  let m = fecha.match(regex("^(\d{4})-(\d{2})-(\d{2})$"))
+  if m != none { m.captures.at(2) + "/" + m.captures.at(1) + "/" + m.captures.at(0) } else { fecha }
+}
+
+// Sección "INFORMACIÓN BÁSICA": etiquetas en mayúsculas y negrita, sin rellenos grises, valores cortos
+// centrados en cursiva y banda de color solo en el título.
 #let _front-matter(cfg, accent, fecha, hora, year) = {
-  set text(size: 8.5pt, hyphenate: false)
-  set par(justify: false)
-  let label-cell(body) = table.cell(fill: luma(245), strong(body))
+  set text(size: 10pt, hyphenate: false)
+  set par(justify: false, leading: 0.55em)
+  let label(body) = strong(upper(body))
+  let value(body) = align(center, emph(body))
+  let level = if cfg.level == none or str(cfg.level) == "" { "—" } else { str(cfg.level) }
   table(
-    columns: (1.5fr, 1fr, 1.4fr, 1fr, 1.1fr, 1fr),
+    columns: (1.5fr, 1fr, 1.35fr, 1fr, 1.1fr, 1fr),
     align: left + horizon,
     stroke: 0.5pt + black,
-    inset: 0.5em,
+    inset: (x: 0.55em, y: 0.5em),
     table.cell(
       colspan: 6,
       fill: accent,
-      align(center, text(fill: white, weight: "bold", size: 11pt)[INFORMACIÓN BÁSICA]),
+      align(center, text(fill: white, weight: "bold", size: 11.5pt)[INFORMACIÓN BÁSICA]),
     ),
-    label-cell[Asignatura:], table.cell(colspan: 5, cfg.course),
-    label-cell[Título de la práctica:], table.cell(colspan: 5, cfg.title),
-    label-cell[Número de la práctica:], [#cfg.number],
-    label-cell[Año lectivo:], [#year],
-    label-cell[Nro. semestre:], [#cfg.semester],
-    label-cell[Fecha de presentación:], [#fecha],
-    label-cell[Hora de presentación:], table.cell(colspan: 3, hora),
+    label[Asignatura:], table.cell(colspan: 5, upper(cfg.course)),
+    label[Título de la práctica:], table.cell(colspan: 5, cfg.title),
+    label[Número de práctica:], value[#cfg.number],
+    label[Año lectivo:], value[#_academic-term(year, cfg.semester)],
+    label[Nro. semestre:], value[#level],
+    label[Fecha de presentación:], value[#_display-date(fecha)],
+    label[Hora de presentación:], table.cell(colspan: 3, hora),
     table.cell(colspan: 4, {
-      strong[Integrante(s):]
-      v(0.15em)
-      set list(marker: [–], indent: 0pt, body-indent: 0.5em, spacing: 0.35em)
-      list(..cfg.members)
+      label[Integrante (s)]
+      linebreak()
+      cfg.members.join(linebreak())
     }),
-    label-cell[NOTA:], [#cfg.note-placeholder],
+    label[Nota (0-20)], value[#cfg.note-placeholder],
     table.cell(colspan: 6, {
-      strong[Docente:]
+      label[Docente(s):]
       linebreak()
       cfg.instructor
     }),
@@ -523,8 +537,8 @@
   set enum(indent: 0.8em, body-indent: 0.6em)
 
   // ---- Documento ----
-  align(center, text(size: 13pt, weight: "bold", cfg.doc-title))
-  v(0.2em)
+  align(center, text(size: 15pt, weight: "bold", cfg.doc-title))
+  v(0.5em)
   _front-matter(cfg, accent, fecha, hora, year)
   v(0.9em)
 

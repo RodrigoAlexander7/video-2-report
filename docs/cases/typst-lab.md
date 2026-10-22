@@ -23,7 +23,8 @@ pipeline = "typst-lab"
 
 [lab]                                  # obligatorios: course, title, number, instructor, members
 course = "..."; title = "..."; number = "06"; instructor = "..."
-semester = "2026B"
+semester = "2026B"                     # año lectivo: se muestra "2026 - B" (también vale "B" con year/date)
+level = "Octavo VIII"                  # opcional: "Nro. semestre" (por defecto "—")
 members = ["Apellidos, Nombres"]
 
 [build]
@@ -42,7 +43,7 @@ script = "scripts/ej1.script"          # un comando del intérprete por línea; 
 
 ## Helpers de la plantilla (`src/typst_engine/templates/informe-laboratorio/lib.typ`)
 
-`listing(path, lang:, caption:, label:)`, `evidence-figure(path, caption, cmd:, label:)`, `figure-img`, `result-table(headers, rows, caption:)`, `uml-diagram(..clases, relations:, caption:)`, `callout`, `cmd`, `section-box`. Las rutas son relativas a la raíz del proyecto.
+`listing(path, lang:, caption:, label:)`, `evidence-figure(path, caption, cmd:, label:)`, `figure-img`, `result-table(headers, rows, caption:)`, `uml-diagram(..clases, relations:, caption:)`, `callout` (sobrio: filete gris sin colores; `kind` no cambia el aspecto), `cmd`, `section-box`. Las rutas son relativas a la raíz del proyecto.
 
 ## Evidencia y verificación
 

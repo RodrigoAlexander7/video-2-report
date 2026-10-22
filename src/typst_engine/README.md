@@ -33,7 +33,7 @@ Rutas de los helpers: relativas a la raíz del proyecto (con o sin `/` inicial).
 resuelven relativos a `lib.typ`. Fecha/hora: `--input fecha=AAAA-MM-DD`, `--input hora=HH:MM`
 > `config.date`/`config.time` > hoy (hora: "—"). Si no se pasa `config`, se lee `--input config=<json>`.
 
-Claves de config (ver `default-config` en `lib.typ`): `course title number instructor semester year
+Claves de config (ver `default-config` en `lib.typ`): `course title number instructor semester level year
 members date time institution doc-title doc-format doc-approval doc-code logo-left logo-right
 note-placeholder font mono-font accent toc list-of-figures feedback results-title bibliography
 bib-style max-unbreakable-lines code-keep-lines`.
