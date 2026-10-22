@@ -29,6 +29,21 @@ class EvidenceTests(unittest.TestCase):
         with open(os.path.join(self.out, item["log"]), encoding="utf-8") as f:
             self.assertIn("a; echo b", f.read())  # el ';' es un argumento literal, no un separador
 
+    def test_terminal_figure_is_not_labelled_as_real_output(self):
+        from unittest import mock
+        from src.evidence_engine.render import render_terminal
+        with mock.patch("src.evidence_engine.capture.render_terminal", wraps=render_terminal) as render:
+            capture_commands("rotulo", ["echo x"], self.out)
+        title = render.call_args.args[1]
+        self.assertNotIn("real", title.lower())   # la procedencia va en el manifiesto, no escrita en la imagen
+
+    def test_ansi_sequences_are_stripped_from_log_and_figure(self):
+        item = capture_commands("ansi", ["printf '\\033[1mApache Maven\\033[m\\n'"], self.out)
+        with open(os.path.join(self.out, item["log"]), encoding="utf-8") as f:
+            log = f.read()
+        self.assertIn("Apache Maven", log)
+        self.assertNotIn("\x1b", log)
+
     def test_missing_command_is_reported_not_raised(self):
         item = capture_commands("falta", ["comando-que-no-existe-xyz"], self.out)
         self.assertEqual(item["returncodes"], [127])

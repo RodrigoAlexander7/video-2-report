@@ -6,6 +6,7 @@ ni expansión inesperada. Si se necesita una tubería, envolverla con `sh -c '..
 """
 
 import os
+import re
 import shlex
 import subprocess
 from typing import Dict, List, Optional, Sequence
@@ -14,6 +15,14 @@ from . import manifest as mf
 from .desktop import render_desktop
 from .render import render_terminal
 from .toolbox import render_toolbox
+
+
+_ANSI = re.compile(r"\x1b\[[0-9;?]*[ -/]*[@-~]")
+
+
+def strip_ansi(text: str) -> str:
+    """Quita secuencias de color/estilo (p. ej. las negritas de `mvn -version`): en la figura salían como cajas."""
+    return _ANSI.sub("", text)
 
 
 def _finish(out_dir: str, name: str, transcript: str, title: str, meta: Dict, screen: Optional[str] = None,
@@ -62,8 +71,9 @@ def capture_commands(name: str, commands: Sequence[str], out_dir: str, cwd: Opti
         if output:
             lines.extend(output.split("\n"))
         codes.append(code)
-    transcript = "\n".join(lines)
-    return _finish(out_dir, name, transcript, "Terminal (salida real)",
+    transcript = strip_ansi("\n".join(lines))
+    # La imagen no se rotula como "real": la procedencia (comando, fecha, hashes) vive en el manifiesto.
+    return _finish(out_dir, name, transcript, "Terminal",
                    {"tool": "shell", "commands": list(commands), "returncodes": codes})
 
 
@@ -74,7 +84,7 @@ def capture_vdmj(name: str, spec_files: List[str], commands: List[str], out_dir:
     from .vdmj import run_session
 
     session = run_session(spec_files, commands, dialect=dialect, release=release, cwd=cwd)
-    title = f"$ {session.command_line}   ({session.version}, salida real)"
+    title = f"$ {session.command_line}   ({session.version})"
     return _finish(out_dir, name, session.transcript, title,
                    {"tool": session.version, "commands": list(commands), "spec_files": [os.path.basename(s) for s in spec_files],
                     "returncodes": [session.returncode]}, screen=screen, window=window)
